@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   color.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mhaddadi <mhaddadi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mhaddadi <mhaddadi@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/12 00:00:00 by mhaddadi          #+#    #+#             */
-/*   Updated: 2025/01/12 00:00:00 by mhaddadi         ###   ########.fr       */
+/*   Created: 2025/08/23 13:47:22 by mhaddadi          #+#    #+#             */
+/*   Updated: 2025/08/23 13:48:19 by mhaddadi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "../include/fdf.h"
 
 int	pick_color(const t_point *p, const t_map *map)
 {

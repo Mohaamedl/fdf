@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mhaddadi <mhaddadi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mhaddadi <mhaddadi@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/12 00:00:00 by mhaddadi          #+#    #+#             */
-/*   Updated: 2025/01/12 00:00:00 by mhaddadi         ###   ########.fr       */
+/*   Created: 2025/08/23 13:52:35 by mhaddadi          #+#    #+#             */
+/*   Updated: 2025/08/23 13:52:52 by mhaddadi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
-#include "libft.h"
-#include "ft_printf.h"
+#include "../include/fdf.h"
 
 static void	init_view_defaults(t_app *app)
 {

@@ -6,7 +6,7 @@
 /*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 13:47:22 by mhaddadi          #+#    #+#             */
-/*   Updated: 2025/08/24 14:36:19 by mohamed          ###   ########.fr       */
+/*   Updated: 2025/08/24 20:48:18 by mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,9 @@ int	pick_color_mode(const t_point *p, const t_map *map, int color_mode)
 {
 	double	percent;
 
-	if (p->color != -1)
+	// Mode 0: honor explicit per-point color if present
+	// Modes >0: override with selected scheme
+	if (color_mode == 0 && p->color != -1)
 		return (p->color);
 	percent = get_percent(p->z, map);
 	if (color_mode < 0 || color_mode > 4)
@@ -67,11 +69,4 @@ int	pick_color(const t_point *p, const t_map *map)
 	return (get_scheme_color(get_percent(p->z, map), 0));
 }
 
-int	pick_color_bonus(const t_point *p, const t_map *map, const void *app)
-{
-	const int	*color_mode_ptr;
-
-	color_mode_ptr = (const int *)((const char *)app
-			+ sizeof(void *) * 3 + sizeof(double) * 14 + sizeof(int) * 6);
-	return (pick_color_mode(p, map, *color_mode_ptr));
-}
+/* Bonus uses pick_color_mode directly. */

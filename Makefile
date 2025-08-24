@@ -15,7 +15,7 @@ OBJ_BONUS_DIR = obj_bonus
 # Mandatory sources
 SRC = main.c hooks.c
 
-# Bonus sources 
+# Bonus sources (minimal, using shared code from src when possible)
 SRC_BONUS = main_bonus.c render_bonus_complete.c hooks_keys_bonus.c hooks_mouse_bonus.c overlay_bonus.c demo_mode_bonus.c
 
 # Shared sources that both mandatory and bonus need

@@ -6,7 +6,7 @@
 /*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 13:58:38 by mhaddadi          #+#    #+#             */
-/*   Updated: 2025/08/24 12:58:18 by mohamed          ###   ########.fr       */
+/*   Updated: 2025/08/24 20:35:40 by mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,9 @@ void	draw_controls_overlay(t_app *app)
 	y += 20;
 	draw_text_line(app, "  Q/E - Z-axis rotation", y, color);
 	y += 15;
-	draw_text_line(app, "  Z/X - X-axis rotation", y, color);
+	draw_text_line(app, "  I/K - X-axis rotation (pitch)", y, color);
 	y += 15;
-	draw_text_line(app, "  R/F - Y-axis rotation", y, color);
+	draw_text_line(app, "  J/L - Y-axis rotation (yaw)", y, color);
 	y += 15;
 	draw_text_line(app, "  Left mouse - Orbit/Rotate", y, color);
 	y += 15;
@@ -59,9 +59,9 @@ void	draw_controls_overlay(t_app *app)
 	y += 25;
 	draw_text_line(app, "EXTRA:", y, 0xFFFF00);
 	y += 20;
-	draw_text_line(app, "  1/2 - Height scale", y, color);
+	draw_text_line(app, "  Z/X or 1/2 - Height scale", y, color);
 	y += 15;
-	draw_text_line(app, "  TAB - Demo mode", y, color);
+	draw_text_line(app, "  SPACE - Demo mode", y, color);
 	y += 15;
 	draw_text_line(app, "  H - Toggle this help", y, color);
 	y += 25;
@@ -98,9 +98,9 @@ void	draw_help_overlay_complete(t_app_bonus *app)
 	y += 20;
 	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFFFF, "  Q/E - Z-axis rotation");
 	y += 15;
-	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFFFF, "  Z/X - X-axis rotation");
+	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFFFF, "  I/K - X-axis rotation (pitch)");
 	y += 15;
-	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFFFF, "  R/F - Y-axis rotation");
+	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFFFF, "  J/L - Y-axis rotation (yaw)");
 	y += 15;
 	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFFFF, "  Left mouse - Orbit/Rotate");
 	y += 15;
@@ -110,11 +110,11 @@ void	draw_help_overlay_complete(t_app_bonus *app)
 	y += 25;
 	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFF00, "EXTRA:");
 	y += 20;
-	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFFFF, "  1/2 - Height scale");
+	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFFFF, "  Z/X or 1/2 - Height scale");
 	y += 15;
 	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFFFF, "  C - Cycle color modes");
 	y += 15;
-	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFFFF, "  TAB - Demo mode");
+	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFFFF, "  SPACE - Demo mode");
 	y += 15;
 	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFFFF, "  H - Toggle this help");
 	y += 25;
@@ -137,22 +137,34 @@ void	draw_status_display(t_app_bonus *app)
 	else
 		proj_name = "PERSPECTIVE";
 	
-	// Display current color mode
-	if (app->color_mode == COLOR_GRADIENT)
-		color_name = "GRADIENT";
-	else if (app->color_mode == COLOR_RAINBOW)
+	// Display current color mode (0..4 supported)
+	if (app->color_mode == 0)
+		color_name = "PALETTE";
+	else if (app->color_mode == 1)
 		color_name = "RAINBOW";
-	else if (app->color_mode == COLOR_MONOCHROME)
-		color_name = "MONOCHROME";
-	else if (app->color_mode == COLOR_FIRE)
+	else if (app->color_mode == 2)
+		color_name = "GRAYSCALE";
+	else if (app->color_mode == 3)
 		color_name = "FIRE";
-	else if (app->color_mode == COLOR_ICE)
+	else if (app->color_mode == 4)
 		color_name = "ICE";
 	else
-		color_name = "GRADIENT";
+		color_name = "PALETTE";
 		
 	mlx_string_put(app->mlx.mlx, app->mlx.win, x, y, 0x00FFFF, "=== STATUS ===");
 	y += 25;
+	// Show FPS if measured (>0)
+	if (app->fps > 0)
+	{
+		char *fps_str = ft_itoa(app->fps);
+		if (fps_str)
+		{
+			mlx_string_put(app->mlx.mlx, app->mlx.win, x, y, 0xCCCCCC, "FPS:");
+			mlx_string_put(app->mlx.mlx, app->mlx.win, x + 40, y, 0xFFFFFF, fps_str);
+			free(fps_str);
+		}
+		y += 25;
+	}
 	mlx_string_put(app->mlx.mlx, app->mlx.win, x, y, 0xCCCCCC, "Projection:");
 	y += 15;
 	mlx_string_put(app->mlx.mlx, app->mlx.win, x + 10, y, 0xFFFFFF, proj_name);

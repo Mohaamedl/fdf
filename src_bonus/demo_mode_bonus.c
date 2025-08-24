@@ -6,7 +6,7 @@
 /*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 13:58:21 by mhaddadi          #+#    #+#             */
-/*   Updated: 2025/08/23 23:06:02 by mohamed          ###   ########.fr       */
+/*   Updated: 2025/08/24 20:35:40 by mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,9 @@ void	demo_mode_update(t_app_bonus *app)
 		app->view.proj = (app->view.proj + 1) % 3;
 	}
 	
-	// Rerender every few frames to keep it smooth but not too intensive
+	// Request redraw; loop hook will render at most ~60 FPS
 	if (demo_frame_count % 2 == 0)
-		rerender_bonus_complete(app);
+		app->needs_redraw = 1;
 }
 
 void	app_message(t_app *app, char *msg)

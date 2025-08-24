@@ -6,7 +6,7 @@
 /*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 13:58:43 by mhaddadi          #+#    #+#             */
-/*   Updated: 2025/08/24 15:46:08 by mohamed          ###   ########.fr       */
+/*   Updated: 2025/08/24 20:35:40 by mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,10 @@ t_point2d	project_bonus_complete(t_point3d p3d, t_view *view, t_map *map)
 	t_point3d	rotated;
 	double		proj_x, proj_y;
     
+	// Center Z around the midpoint so all projections are vertically centered
+	const double cz = ((map->zmin + map->zmax) / 2.0) * view->zscale;
+	p3d.z -= cz;
+
 	// Cache reusable values
 	const double cx = (map->w - 1) / 2.0;
 	const double cy = (map->h - 1) / 2.0;
@@ -73,23 +77,27 @@ t_point2d	project_bonus_complete(t_point3d p3d, t_view *view, t_map *map)
 	// Apply different projection modes
 	if (view->proj == PROJ_ISO)  // Isometric (classic 30-degree)
 	{
-		proj_x = (rotated.x - rotated.y) * cos(M_PI / 6.0);
-		proj_y = (rotated.x + rotated.y) * sin(M_PI / 6.0) - rotated.z;
+		// Fixed 30° iso basis; Z lowers Y for height
+		const double a = M_PI / 6.0;
+		proj_x = (rotated.x - rotated.y) * cos(a);
+		proj_y = (rotated.x + rotated.y) * sin(a) - rotated.z;
 	}
 	else if (view->proj == PROJ_PAR)  // Parallel (orthographic)
 	{
+		// Pure orthographic: no Z skew; depth by rotation/color only
 		proj_x = rotated.x;
-		proj_y = rotated.y - rotated.z * 0.3;  // Slight Z offset for depth
+		proj_y = rotated.y;
 	}
 	else  // Perspective (3D with depth)
 	{
-		double	fov = 800.0;  // Field of view distance
-		double	distance = fov - rotated.z;  // Camera distance
-		
-		if (distance < 50.0)  // Prevent division by very small numbers
-			distance = 50.0;
-		proj_x = rotated.x * fov / distance;
-		proj_y = rotated.y * fov / distance;
+		// Standard pinhole camera: project onto plane using camera distance
+		const double D = 800.0; // camera distance in world units
+		double denom = rotated.z + D; // assume camera looks along -Z towards origin
+
+		if (denom < 50.0) // clamp to avoid extreme magnification
+			denom = 50.0;
+		proj_x = rotated.x * (D / denom);
+		proj_y = rotated.y * (D / denom);
 	}
 
 	// Apply scale and translation
@@ -114,9 +122,9 @@ static void	draw_horizontal_line_bonus(t_app_bonus *app, int x, int y)
 	t_point2d		pt1, pt2;
 
 	if (!app || !app->map.pts || x + 1 >= app->map.w || y >= app->map.h)
-		return ;
-	if (!app->map.pts[y] || !app->map.pts[y][x].color || !app->map.pts[y][x + 1].color)
-		return ;
+		return;
+	if (!app->map.pts[y])
+		return;
 	
 	p1 = &app->map.pts[y][x];
 	p2 = &app->map.pts[y][x + 1];

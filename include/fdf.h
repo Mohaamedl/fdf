@@ -6,7 +6,7 @@
 /*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 13:49:22 by mhaddadi          #+#    #+#             */
-/*   Updated: 2025/08/24 15:46:08 by mohamed          ###   ########.fr       */
+/*   Updated: 2025/08/24 20:35:40 by mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <unistd.h>
 # include <fcntl.h>
 # include <math.h>
+# include <sys/time.h>
 # include "../libft/inc/libft.h"
 # include "../libft/inc/ft_printf.h"
 # include "../libft/inc/get_next_line.h"
@@ -82,15 +83,16 @@ typedef struct s_mlx
 
 typedef struct s_view
 {
-	double	scale;
-	double	offset_x;
-	double	offset_y;
-	double	angle;
-	double	zscale;
-	int		proj;
-	double	rot_x;
-	double	rot_y;
-	double	rot_z;
+	double			scale;
+	double			offset_x;
+	double			offset_y;
+	double			angle;
+	double			zscale;
+	int				proj;
+	double			rot_x;
+	double			rot_y;
+	double			rot_z;
+	struct timeval	last_render_time;
 }	t_view;
 
 typedef struct s_app

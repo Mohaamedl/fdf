@@ -6,11 +6,12 @@
 /*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 13:58:32 by mhaddadi          #+#    #+#             */
-/*   Updated: 2025/08/24 10:50:13 by mohamed          ###   ########.fr       */
+/*   Updated: 2025/08/24 20:35:40 by mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf_bonus.h"
+#include <sys/time.h>
 
 void	app_destroy_bonus(t_app_bonus *app, int code)
 {
@@ -49,9 +50,6 @@ void	rerender_bonus_complete(t_app_bonus *app)
 // Force immediate rerender (for single events like projection change)
 void	rerender_bonus_immediate(t_app_bonus *app)
 {
-	app->frame_skip_counter = 0;
-	app->needs_rerender = 0;
-	
 	render_wireframe_bonus_complete(app);
 	mlx_put_image_to_window(app->mlx.mlx, app->mlx.win, app->mlx.img.ptr, 0, 0);
 	draw_help_overlay_complete(app);
@@ -70,6 +68,9 @@ static void	init_view_bonus(t_app_bonus *app)
 	app->view.rot_y = 0.0;      // No initial rotation
 	app->view.rot_z = 0.0;      // No initial roll
 	
+	// Initialize timing for smooth rendering
+	gettimeofday(&app->view.last_render_time, NULL);
+	
 	// Auto-scale based on map size to fit the screen nicely
 	scale_x = (WIN_W * 0.6) / app->map.w;
 	scale_y = (WIN_H * 0.6) / app->map.h;
@@ -86,8 +87,6 @@ static void	init_view_bonus(t_app_bonus *app)
 	app->view.offset_y = WIN_H / 2;
 	app->show_help = 0;  // Start with help hidden so wireframe is visible
 	app->demo_mode = 0;
-	app->frame_skip_counter = 0;
-	app->needs_rerender = 0;
 }
 
 int	main(int argc, char **argv)
@@ -110,7 +109,9 @@ int	main(int argc, char **argv)
 	ft_memset(&app.mlx, 0, sizeof(t_mlx));
 	app.show_help = 0;
 	app.demo_mode = 0;
-	app.color_mode = COLOR_GRADIENT;  // Start with gradient colors
+	app.fps = 0;
+	app.needs_redraw = 1;
+	app.color_mode = COLOR_DEFAULT;  // Start with gradient colors
 	app.mouse_down = 0;
 	app.mouse_button = 0;
 	app.last_x = 0;
@@ -124,18 +125,15 @@ int	main(int argc, char **argv)
 	}
 	
 	init_view_bonus(&app);
+	// Ensure demo is off at startup regardless of prior state
+	app.demo_mode = 0;
 	
-	// Initialize key repeat system
-	int i = 0;
-	while (i < 512)
-	{
-		app.keys_pressed[i] = 0;
-		i++;
-	}
-	app.key_repeat_enabled = 1;
+
 	
 	// Set up hooks
 	mlx_hook(app.mlx.win, 17, 0, hook_destroy_bonus, &app);
+	// Register both generic key hook and specific X11 KeyPress for reliability
+	mlx_key_hook(app.mlx.win, hook_key_bonus_complete, &app);
 	mlx_hook(app.mlx.win, 2, 1L<<0, hook_key_bonus_complete, &app);    // Key press
 	mlx_hook(app.mlx.win, 3, 1L<<1, hook_key_release_bonus, &app);     // Key release
 	mlx_loop_hook(app.mlx.mlx, loop_hook_bonus, &app);                 // Continuous loop
@@ -146,7 +144,7 @@ int	main(int argc, char **argv)
 	mlx_hook(app.mlx.win, 6, 1L<<6, hook_mouse_move_bonus, &app);
 	
 	// Initial render
-	rerender_bonus_complete(&app);
+	app.needs_redraw = 1;
 	
 	// Start main loop
 	mlx_loop(app.mlx.mlx);

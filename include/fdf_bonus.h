@@ -6,7 +6,7 @@
 /*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 00:00:00 by mhaddadi          #+#    #+#             */
-/*   Updated: 2025/08/24 11:16:40 by mohamed          ###   ########.fr       */
+/*   Updated: 2025/08/24 15:46:08 by mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -268,7 +268,7 @@ int		mix(int a, int b);
 void	img_clear(t_img *img, int color);
 void	put_px(t_img *img, int x, int y, int color);
 void	draw_line_pts(t_img *img, t_point2d a, t_point2d b, int color);
-void	draw_line_pts_color(t_img *img, t_point2d a, t_point2d b, int color1, int color2);
+void	draw_line_pts_color(t_img *img, t_point2d a, t_point2d b, int color);
 
 /* projection */
 void	project_point_safe(const t_view *v, t_proj_params *params);

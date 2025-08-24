@@ -6,7 +6,7 @@
 /*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 14:20:00 by mhaddadi          #+#    #+#             */
-/*   Updated: 2025/08/24 10:05:57 by mohamed          ###   ########.fr       */
+/*   Updated: 2025/08/24 12:58:18 by mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ static double	normalize_angle(double a)
 int				hook_mouse_bonus(int button, int x, int y, void *param)
 {
 	t_app_bonus	*app;
-	double			zoom_factor;
 
 	app = (t_app_bonus *)param;
 	if (!app)
@@ -34,15 +33,13 @@ int				hook_mouse_bonus(int button, int x, int y, void *param)
 
 	if (button == BTN_SCROLL_UP || button == BTN_SCROLL_DOWN)
 	{
-		zoom_factor = (button == BTN_SCROLL_UP) ? 1.1 : 0.9;
-		// Zoom around cursor
-		double ox = app->view.offset_x;
-		double oy = app->view.offset_y;
-		app->view.scale *= zoom_factor;
-		if (app->view.scale < 0.05)
-			app->view.scale = 0.05;
-		app->view.offset_x = x - (x - ox) * zoom_factor;
-		app->view.offset_y = y - (y - oy) * zoom_factor;
+		// Fixed zoom increment like inspiration (more predictable)
+		if (button == BTN_SCROLL_UP)
+			app->view.scale += 2.0;
+		else
+			app->view.scale -= 2.0;
+		if (app->view.scale < 1.0)
+			app->view.scale = 1.0;
 		rerender_bonus_complete(app);
 		return (0);
 	}
@@ -69,58 +66,75 @@ int				hook_mouse_release_bonus(int button, int x, int y, void *param)
 	{
 		app->mouse_down = 0;
 		app->mouse_button = 0;
+		
+		// Final render when mouse is released to ensure clean image
+		rerender_bonus_complete(app);
 	}
 	return (0);
 }
 
-// Mouse move handler inspired by insp.c
-// Left drag = pan, Right drag = rotate X/Y, Middle drag = rotate Z
+// Mouse move handler inspired by inspiration code
+// LEFT = rotate X/Y angles, RIGHT = pan/translate, MIDDLE = rotate Z
 int				hook_mouse_move_bonus(int x, int y, void *param)
 {
 	t_app_bonus	*app;
 	int			dx;
 	int			dy;
 	double		sens;
+	static int	move_count = 0;
 
 	app = (t_app_bonus *)param;
-	if (!app)
+	if (!app || !app->mouse_down)
 		return (0);
-	if (!app->mouse_down)
-	{
-		app->last_x = x;
-		app->last_y = y;
-		return (0);
-	}
 
 	dx = x - app->last_x;
 	dy = y - app->last_y;
 	app->last_x = x;
 	app->last_y = y;
-	sens = 0.002;
+	sens = 0.005;  // Good sensitivity for smooth control
 
+	// LEFT MOUSE = ORBIT/ROTATE (Blender-style turntable mode)
 	if (app->mouse_button == BTN_LEFT)
 	{
-		// Rotate X/Y
-		app->view.rot_x = normalize_angle(app->view.rot_x + dy * sens);
-		app->view.rot_y = normalize_angle(app->view.rot_y + dx * sens);
-		// Debug: print color mode to see if it's changing unexpectedly
-		// printf("Mouse rotation: color_mode = %d\n", app->color_mode);
+		// Horizontal mouse movement = yaw around Y axis (left/right orbit)
+		app->view.rot_y += dx * sens;
+		
+		// Vertical mouse movement = pitch around X axis (up/down orbit)
+		app->view.rot_x += dy * sens;
+		
+		// Normalize angles to prevent overflow
+		app->view.rot_x = normalize_angle(app->view.rot_x);
+		app->view.rot_y = normalize_angle(app->view.rot_y);
+		
+		// Clamp X rotation to prevent flipping upside down (like Blender)
+		if (app->view.rot_x > M_PI / 2.0)
+			app->view.rot_x = M_PI / 2.0;
+		if (app->view.rot_x < -M_PI / 2.0)
+			app->view.rot_x = -M_PI / 2.0;
 	}
+	// RIGHT MOUSE = PAN/TRANSLATE (move the view around) 
 	else if (app->mouse_button == BTN_RIGHT)
 	{
-		// Pan
 		app->view.offset_x += dx;
 		app->view.offset_y += dy;
 	}
+	// MIDDLE MOUSE = Z-ROTATION (roll around Z-axis)
 	else if (app->mouse_button == BTN_MIDDLE)
 	{
-		// Rotate Z depending on side of screen (like insp.c)
 		if (x < (WIN_W / 2) + app->view.offset_x)
-			app->view.rot_z = normalize_angle(app->view.rot_z - dy * sens);
+			app->view.rot_z -= dy * sens;
 		else
-			app->view.rot_z = normalize_angle(app->view.rot_z + dy * sens);
+			app->view.rot_z += dy * sens;
+		app->view.rot_z = normalize_angle(app->view.rot_z);
 	}
 
-	rerender_bonus_complete(app);
+	// Throttle rendering: only render every 3rd movement for smooth performance
+	move_count++;
+	if (move_count >= 3)
+	{
+		move_count = 0;
+		rerender_bonus_complete(app);
+	}
+
 	return (0);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mlx_init.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mhaddadi <mhaddadi@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 13:52:58 by mhaddadi          #+#    #+#             */
-/*   Updated: 2025/08/23 13:53:10 by mhaddadi         ###   ########.fr       */
+/*   Updated: 2025/08/24 15:46:08 by mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,4 +28,57 @@ int	mlx_init_safe(t_mlx *m)
 	m->img.addr = mlx_get_data_addr(m->img.ptr, &m->img.bpp,
 			&m->img.line_len, &m->img.endian);
 	return (1);
+}
+
+static int	count_width_from_tokens(char **tokens)
+{
+	int	w;
+
+	w = 0;
+	if (tokens)
+	{
+		while (tokens[w])
+			w++;
+		free_string_array(tokens);
+	}
+	return (w);
+}
+
+static int	count_file_lines(int fd, int *width)
+{
+	char	*line;
+	char	**tokens;
+	int		w;
+	int		h;
+
+	h = 0;
+	w = 0;
+	line = get_next_line(fd);
+	while (line)
+	{
+		if (h == 0)
+		{
+			tokens = ft_split(line, ' ');
+			w = count_width_from_tokens(tokens);
+		}
+		free(line);
+		h++;
+		line = get_next_line(fd);
+	}
+	*width = w;
+	return (h);
+}
+
+int	count_dimensions(const char *path, int *width, int *height)
+{
+	int		fd;
+	int		h;
+
+	fd = open(path, O_RDONLY);
+	if (fd < 0)
+		return (0);
+	h = count_file_lines(fd, width);
+	close(fd);
+	*height = h;
+	return (*width > 0 && h > 0);
 }

@@ -1,0 +1,98 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/24 14:25:12 by mohamed          #+#    #+#             */
+/*   Updated: 2025/08/24 14:25:12 by mohamed          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "../include/fdf.h"
+
+int	hex_color_to_int(const char *hex_str)
+{
+	int		result;
+	int		i;
+	char	c;
+
+	result = 0;
+	i = 0;
+	while (i < 6 && hex_str[i])
+	{
+		c = hex_str[i];
+		result = result << 4;
+		if (c >= '0' && c <= '9')
+			result += (c - '0');
+		else if (c >= 'A' && c <= 'F')
+			result += (c - 'A' + 10);
+		else if (c >= 'a' && c <= 'f')
+			result += (c - 'a' + 10);
+		i++;
+	}
+	return (result);
+}
+
+int	string_to_int_len(const char *str, int len)
+{
+	int		result;
+	int		sign;
+	int		i;
+
+	result = 0;
+	sign = 1;
+	i = 0;
+	if (str[0] == '-')
+	{
+		sign = -1;
+		i = 1;
+	}
+	else if (str[0] == '+')
+		i = 1;
+	while (i < len && str[i] >= '0' && str[i] <= '9')
+	{
+		result = result * 10 + (str[i] - '0');
+		i++;
+	}
+	return (result * sign);
+}
+
+void	free_string_array(char **array)
+{
+	int	i;
+
+	if (!array)
+		return ;
+	i = 0;
+	while (array[i])
+	{
+		free(array[i]);
+		i++;
+	}
+	free(array);
+}
+
+void	free_map(t_map *map)
+{
+	int	i;
+
+	if (!map || !map->pts)
+		return ;
+	i = 0;
+	while (i < map->h)
+	{
+		if (map->pts[i])
+			free(map->pts[i]);
+		i++;
+	}
+	free(map->pts);
+	map->pts = NULL;
+}
+
+void	init_map_parsing(t_map *map)
+{
+	map->zmin = 2147483647;
+	map->zmax = -2147483648;
+}

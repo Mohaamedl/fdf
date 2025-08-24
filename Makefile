@@ -13,15 +13,15 @@ OBJ_DIR = obj
 OBJ_BONUS_DIR = obj_bonus
 
 # Mandatory sources
-SRC = main.c parse.c render.c render_utils.c color.c mlx_init.c hooks.c view.c projection.c
+SRC = main.c hooks.c
 
 # Bonus sources 
 SRC_BONUS = main_bonus.c render_bonus_complete.c hooks_keys_bonus.c hooks_mouse_bonus.c overlay_bonus.c demo_mode_bonus.c
 
 # Shared sources that both mandatory and bonus need
-SHARED_SRC = parse.c render.c render_utils.c mlx_init.c view.c projection.c color.c
+SHARED_SRC = parse.c render.c render_utils.c mlx_init.c view.c projection.c color.c utils.c parse_utils.c
 
-OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o)
+OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o) $(SHARED_SRC:%.c=$(OBJ_DIR)/%.o)
 OBJ_BONUS = $(SRC_BONUS:%.c=$(OBJ_BONUS_DIR)/%.o) \
 			$(SHARED_SRC:%.c=$(OBJ_BONUS_DIR)/%.o)
 

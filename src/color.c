@@ -6,7 +6,7 @@
 /*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 13:47:22 by mhaddadi          #+#    #+#             */
-/*   Updated: 2025/08/24 11:16:40 by mohamed          ###   ########.fr       */
+/*   Updated: 2025/08/24 14:36:19 by mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,6 @@ int	pick_color_bonus(const t_point *p, const t_map *map, const void *app)
 	const int	*color_mode_ptr;
 
 	color_mode_ptr = (const int *)((const char *)app
-		+ sizeof(void *) * 3 + sizeof(double) * 14 + sizeof(int) * 6);
+			+ sizeof(void *) * 3 + sizeof(double) * 14 + sizeof(int) * 6);
 	return (pick_color_mode(p, map, *color_mode_ptr));
 }

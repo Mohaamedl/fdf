@@ -6,7 +6,7 @@
 /*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 13:58:38 by mhaddadi          #+#    #+#             */
-/*   Updated: 2025/08/24 10:05:57 by mohamed          ###   ########.fr       */
+/*   Updated: 2025/08/24 12:58:18 by mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	draw_controls_overlay(t_app *app)
 	y += 20;
 	draw_text_line(app, "  WASD/Arrows - Move model", y, color);
 	y += 15;
-	draw_text_line(app, "  Right mouse - Drag to move", y, color);
+	draw_text_line(app, "  Right mouse - Pan/Move view", y, color);
 	y += 25;
 	draw_text_line(app, "ROTATION:", y, 0xFFFF00);
 	y += 20;
@@ -51,7 +51,11 @@ void	draw_controls_overlay(t_app *app)
 	y += 15;
 	draw_text_line(app, "  R/F - Y-axis rotation", y, color);
 	y += 15;
-	draw_text_line(app, "  Left mouse - Orbit camera", y, color);
+	draw_text_line(app, "  Left mouse - Orbit/Rotate", y, color);
+	y += 15;
+	draw_text_line(app, "  Right mouse - Pan/Move view", y, color);
+	y += 15;
+	draw_text_line(app, "  Middle mouse - Z-axis rotation", y, color);
 	y += 25;
 	draw_text_line(app, "EXTRA:", y, 0xFFFF00);
 	y += 20;
@@ -88,7 +92,7 @@ void	draw_help_overlay_complete(t_app_bonus *app)
 	y += 20;
 	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFFFF, "  WASD/Arrows - Move model");
 	y += 15;
-	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFFFF, "  Right mouse - Drag to move");
+	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFFFF, "  Right mouse - Pan/Move view");
 	y += 25;
 	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFF00, "ROTATION:");
 	y += 20;
@@ -98,7 +102,11 @@ void	draw_help_overlay_complete(t_app_bonus *app)
 	y += 15;
 	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFFFF, "  R/F - Y-axis rotation");
 	y += 15;
-	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFFFF, "  Left mouse - Orbit camera");
+	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFFFF, "  Left mouse - Orbit/Rotate");
+	y += 15;
+	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFFFF, "  Right mouse - Pan/Move view");
+	y += 15;
+	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFFFF, "  Middle mouse - Z-axis rotation");
 	y += 25;
 	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFF00, "EXTRA:");
 	y += 20;

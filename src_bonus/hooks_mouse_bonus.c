@@ -6,7 +6,7 @@
 /*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 14:20:00 by mhaddadi          #+#    #+#             */
-/*   Updated: 2025/08/23 19:47:30 by mohamed          ###   ########.fr       */
+/*   Updated: 2025/08/24 10:05:57 by mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,8 @@ int				hook_mouse_move_bonus(int x, int y, void *param)
 		// Rotate X/Y
 		app->view.rot_x = normalize_angle(app->view.rot_x + dy * sens);
 		app->view.rot_y = normalize_angle(app->view.rot_y + dx * sens);
+		// Debug: print color mode to see if it's changing unexpectedly
+		// printf("Mouse rotation: color_mode = %d\n", app->color_mode);
 	}
 	else if (app->mouse_button == BTN_RIGHT)
 	{

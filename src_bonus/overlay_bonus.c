@@ -6,7 +6,7 @@
 /*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 13:58:38 by mhaddadi          #+#    #+#             */
-/*   Updated: 2025/08/23 21:43:48 by mohamed          ###   ########.fr       */
+/*   Updated: 2025/08/24 10:05:57 by mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,8 @@ void	draw_help_overlay_complete(t_app_bonus *app)
 	y += 20;
 	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFFFF, "  1/2 - Height scale");
 	y += 15;
+	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFFFF, "  C - Cycle color modes");
+	y += 15;
 	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFFFF, "  TAB - Demo mode");
 	y += 15;
 	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFFFF, "  H - Toggle this help");
@@ -117,6 +119,7 @@ void	draw_status_display(t_app_bonus *app)
 	int		x = WIN_W - 220;
 	int		y = 20;
 	char	*proj_name;
+	char	*color_name;
 	
 	// Display current projection
 	if (app->view.proj == PROJ_ISO)
@@ -125,13 +128,31 @@ void	draw_status_display(t_app_bonus *app)
 		proj_name = "PARALLEL";
 	else
 		proj_name = "PERSPECTIVE";
+	
+	// Display current color mode
+	if (app->color_mode == COLOR_GRADIENT)
+		color_name = "GRADIENT";
+	else if (app->color_mode == COLOR_RAINBOW)
+		color_name = "RAINBOW";
+	else if (app->color_mode == COLOR_MONOCHROME)
+		color_name = "MONOCHROME";
+	else if (app->color_mode == COLOR_FIRE)
+		color_name = "FIRE";
+	else if (app->color_mode == COLOR_ICE)
+		color_name = "ICE";
+	else
+		color_name = "GRADIENT";
 		
 	mlx_string_put(app->mlx.mlx, app->mlx.win, x, y, 0x00FFFF, "=== STATUS ===");
 	y += 25;
 	mlx_string_put(app->mlx.mlx, app->mlx.win, x, y, 0xCCCCCC, "Projection:");
 	y += 15;
 	mlx_string_put(app->mlx.mlx, app->mlx.win, x + 10, y, 0xFFFFFF, proj_name);
-	y += 30;
+	y += 25;
+	mlx_string_put(app->mlx.mlx, app->mlx.win, x, y, 0xCCCCCC, "Colors:");
+	y += 15;
+	mlx_string_put(app->mlx.mlx, app->mlx.win, x + 10, y, 0xFFFFFF, color_name);
+	y += 25;
 	
 	if (app->demo_mode)
 	{

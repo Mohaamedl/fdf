@@ -6,7 +6,7 @@
 /*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 13:58:22 by mhaddadi          #+#    #+#             */
-/*   Updated: 2025/08/23 23:21:28 by mohamed          ###   ########.fr       */
+/*   Updated: 2025/08/24 11:16:40 by mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,6 +187,13 @@ int	hook_key_bonus_complete(int keycode, void *param)
 		else
 			write(1, "Demo mode OFF\n", 14);
 		rerender_bonus_immediate(app);  // Immediate for toggle
+	}
+	
+	// Color mode cycling (C key)
+	else if (keycode == KEY_C)
+	{
+		app->color_mode = (app->color_mode + 1) % 5;
+		rerender_bonus_immediate(app);
 	}
 	
 	return (0);

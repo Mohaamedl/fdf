@@ -3,14 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   parse.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mhaddadi <mhaddadi@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 13:51:05 by mhaddadi          #+#    #+#             */
-/*   Updated: 2025/08/23 13:51:34 by mhaddadi         ###   ########.fr       */
+/*   Updated: 2025/08/24 09:45:14 by mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/fdf.h"
+
+static int	parse_int_fast(const char *str, int len);
+static int	parse_token_direct(const char *tok, int len, int *z, int *color);
+static int	parse_line_direct(const char *line, int expected_w, t_point *row, t_map *map);
 
 static void	free_tokens(char **tokens)
 {
@@ -27,101 +31,190 @@ static void	free_tokens(char **tokens)
 	free(tokens);
 }
 
-static int	parse_hex_color(const char *hex_str)
+static int	parse_hex_color_fast(const char *hex_str)
 {
 	int		result;
-	int		i;
 	char	c;
 
 	result = 0;
-	i = 0;
-	while (hex_str[i])
-	{
-		c = hex_str[i];
-		result *= 16;
-		if (c >= '0' && c <= '9')
-			result += c - '0';
-		else if (c >= 'A' && c <= 'F')
-			result += c - 'A' + 10;
-		else if (c >= 'a' && c <= 'f')
-			result += c - 'a' + 10;
-		i++;
-	}
+	// Unrolled loop for exactly 6 hex digits (RRGGBB)
+	// Most colors in julia.fdf are exactly 6 digits
+	c = *hex_str++;
+	if (c >= '0' && c <= '9') result = (result << 4) + (c - '0');
+	else if (c >= 'A' && c <= 'F') result = (result << 4) + (c - 'A' + 10);
+	else if (c >= 'a' && c <= 'f') result = (result << 4) + (c - 'a' + 10);
+	
+	c = *hex_str++;
+	if (c >= '0' && c <= '9') result = (result << 4) + (c - '0');
+	else if (c >= 'A' && c <= 'F') result = (result << 4) + (c - 'A' + 10);
+	else if (c >= 'a' && c <= 'f') result = (result << 4) + (c - 'a' + 10);
+	
+	c = *hex_str++;
+	if (c >= '0' && c <= '9') result = (result << 4) + (c - '0');
+	else if (c >= 'A' && c <= 'F') result = (result << 4) + (c - 'A' + 10);
+	else if (c >= 'a' && c <= 'f') result = (result << 4) + (c - 'a' + 10);
+	
+	c = *hex_str++;
+	if (c >= '0' && c <= '9') result = (result << 4) + (c - '0');
+	else if (c >= 'A' && c <= 'F') result = (result << 4) + (c - 'A' + 10);
+	else if (c >= 'a' && c <= 'f') result = (result << 4) + (c - 'a' + 10);
+	
+	c = *hex_str++;
+	if (c >= '0' && c <= '9') result = (result << 4) + (c - '0');
+	else if (c >= 'A' && c <= 'F') result = (result << 4) + (c - 'A' + 10);
+	else if (c >= 'a' && c <= 'f') result = (result << 4) + (c - 'a' + 10);
+	
+	c = *hex_str++;
+	if (c >= '0' && c <= '9') result = (result << 4) + (c - '0');
+	else if (c >= 'A' && c <= 'F') result = (result << 4) + (c - 'A' + 10);
+	else if (c >= 'a' && c <= 'f') result = (result << 4) + (c - 'a' + 10);
+	
 	return (result);
 }
 
-static int	parse_token(const char *tok, int *z, int *color)
+static int	parse_int_fast(const char *str, int len)
 {
-	char	*comma_pos;
-	long	val;
+	int		result;
+	int		sign;
+	int		i;
 
-	*color = 0xFFFFFF;
-	comma_pos = ft_strchr(tok, ',');
-	if (comma_pos)
-		*comma_pos = '\0';
-	val = ft_atol(tok);
-	if (val < -2147483648LL || val > 2147483647LL)
-		return (0);
-	*z = (int)val;
-	if (comma_pos)
+	result = 0;
+	sign = 1;
+	i = 0;
+	
+	// Handle sign
+	if (str[0] == '-')
 	{
-		*comma_pos = ',';
-		if (ft_strncmp(comma_pos + 1, "0x", 2) == 0)
-			*color = parse_hex_color(comma_pos + 3);
-		else if (ft_strncmp(comma_pos + 1, "0X", 2) == 0)
-			*color = parse_hex_color(comma_pos + 3);
+		sign = -1;
+		i = 1;
 	}
-	return (1);
+	else if (str[0] == '+')
+		i = 1;
+	
+	// Parse digits
+	while (i < len && str[i] >= '0' && str[i] <= '9')
+	{
+		result = result * 10 + (str[i] - '0');
+		i++;
+	}
+	
+	return (result * sign);
 }
 
-static int	parse_line_tokens(char **tokens, int expected_w, t_point *row,
-		t_map *map)
+static int	parse_line_direct(const char *line, int expected_w, t_point *row, t_map *map)
 {
-	int	x;
-	int	z;
-	int	c;
+	const char	*ptr;
+	int			x;
+	int			z;
+	int			color;
+	int			len;
 
+	ptr = line;
 	x = 0;
-	while (tokens[x])
+	
+	while (x < expected_w && *ptr)
 	{
-		if (!parse_token(tokens[x], &z, &c))
+		// Skip whitespace
+		while (*ptr == ' ' || *ptr == '\t')
+			ptr++;
+		
+		if (!*ptr)
+			break;
+		
+		// Find end of current token
+		len = 0;
+		while (ptr[len] && ptr[len] != ' ' && ptr[len] != '\t' && ptr[len] != '\n')
+			len++;
+		
+		if (!parse_token_direct(ptr, len, &z, &color))
 			return (0);
+		
 		row[x].z = z;
-		row[x].color = c;
+		row[x].color = color;
 		if (z < map->zmin)
 			map->zmin = z;
 		if (z > map->zmax)
 			map->zmax = z;
+		
+		ptr += len;
 		x++;
 	}
-	if (x != expected_w)
-		return (0);
+	
+	return (x == expected_w);
+}
+
+static int	parse_token_direct(const char *tok, int len, int *z, int *color)
+{
+	int		comma_pos;
+	int		i;
+
+	*color = -1;
+	comma_pos = -1;
+	
+	// Find comma position
+	for (i = 0; i < len; i++)
+	{
+		if (tok[i] == ',')
+		{
+			comma_pos = i;
+			break;
+		}
+	}
+	
+	if (comma_pos >= 0)
+	{
+		// Parse Z value before comma
+		*z = parse_int_fast(tok, comma_pos);
+		
+		// Parse color after comma
+		if (comma_pos + 3 < len && tok[comma_pos + 1] == '0' && 
+			(tok[comma_pos + 2] == 'x' || tok[comma_pos + 2] == 'X'))
+		{
+			*color = parse_hex_color_fast(tok + comma_pos + 3);
+		}
+	}
+	else
+	{
+		// No comma, just parse Z value
+		*z = parse_int_fast(tok, len);
+	}
+	
 	return (1);
 }
 
 static int	parse_map_file(int fd, t_map *map)
 {
 	char	*line;
-	char	**tokens;
 	int		y;
+	int		progress_counter;
 
 	map->zmin = 2147483647;
 	map->zmax = -2147483648;
 	y = 0;
+	progress_counter = 0;
+	
 	while ((line = get_next_line(fd)))
 	{
-		tokens = ft_split(line, ' ');
-		free(line);
-		if (!tokens)
-			return (0);
-		if (!parse_line_tokens(tokens, map->w, map->pts[y], map))
+		// Show progress for very large maps every 100 lines
+		if (map->w * map->h > 50000 && ++progress_counter % 100 == 0)
 		{
-			free_tokens(tokens);
+			write(1, ".", 1);  // Simple progress indicator
+		}
+		
+		// Parse directly without splitting - much faster!
+		if (!parse_line_direct(line, map->w, map->pts[y], map))
+		{
+			free(line);
 			return (0);
 		}
-		free_tokens(tokens);
+		free(line);
 		y++;
 	}
+	
+	// Newline after progress dots
+	if (map->w * map->h > 50000)
+		write(1, "\n", 1);
+	
 	return (1);
 }
 
@@ -188,6 +281,13 @@ int	parse_map(const char *path, t_map *map)
 
 	if (!count_dimensions(path, &map->w, &map->h))
 		return (0);
+	
+	// Show loading message for large maps
+	if (map->w * map->h > 50000)
+	{
+		write(1, "Loading large map, please wait...\n", 34);
+	}
+	
 	if (!allocate_map(map))
 		return (0);
 	fd = open(path, O_RDONLY);

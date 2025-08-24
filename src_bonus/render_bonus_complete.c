@@ -6,7 +6,7 @@
 /*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 13:58:43 by mhaddadi          #+#    #+#             */
-/*   Updated: 2025/08/23 23:21:28 by mohamed          ###   ########.fr       */
+/*   Updated: 2025/08/24 11:16:40 by mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,7 +140,7 @@ static void	draw_horizontal_line_bonus(t_app_bonus *app, int x, int y)
 		return;
 	
 	// Draw line with color interpolation for smooth gradients
-	draw_line_pts_color(&app->mlx.img, pt1, pt2, pick_color(p1, &app->map), pick_color(p2, &app->map));
+	draw_line_pts_color(&app->mlx.img, pt1, pt2, pick_color_mode(p1, &app->map, app->color_mode), pick_color_mode(p2, &app->map, app->color_mode));
 }
 
 static void	draw_vertical_line_bonus(t_app_bonus *app, int x, int y)
@@ -178,7 +178,7 @@ static void	draw_vertical_line_bonus(t_app_bonus *app, int x, int y)
 		return;
 	
 	// Draw line with color interpolation for smooth gradients
-	draw_line_pts_color(&app->mlx.img, pt1, pt2, pick_color(p1, &app->map), pick_color(p2, &app->map));
+	draw_line_pts_color(&app->mlx.img, pt1, pt2, pick_color_mode(p1, &app->map, app->color_mode), pick_color_mode(p2, &app->map, app->color_mode));
 }
 
 void	render_wireframe_bonus_complete(t_app_bonus *app)

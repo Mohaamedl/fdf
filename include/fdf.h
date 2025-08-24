@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fdf.h                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mhaddadi <mhaddadi@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 13:49:22 by mhaddadi          #+#    #+#             */
-/*   Updated: 2025/08/23 13:52:26 by mhaddadi         ###   ########.fr       */
+/*   Updated: 2025/08/24 11:16:40 by mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,6 +162,8 @@ void	project_point_safe(const t_view *view, t_proj_params *params);
 
 /* Color functions */
 int		pick_color(const t_point *p, const t_map *map);
+int		pick_color_mode(const t_point *p, const t_map *map, int color_mode);
+int		pick_color_bonus(const t_point *p, const t_map *map, const void *app);
 
 /* Hook functions */
 int		hook_key(int keycode, void *param);

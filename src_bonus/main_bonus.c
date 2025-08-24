@@ -6,7 +6,7 @@
 /*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 13:58:32 by mhaddadi          #+#    #+#             */
-/*   Updated: 2025/08/23 23:21:28 by mohamed          ###   ########.fr       */
+/*   Updated: 2025/08/24 10:50:13 by mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,6 +110,7 @@ int	main(int argc, char **argv)
 	ft_memset(&app.mlx, 0, sizeof(t_mlx));
 	app.show_help = 0;
 	app.demo_mode = 0;
+	app.color_mode = COLOR_GRADIENT;  // Start with gradient colors
 	app.mouse_down = 0;
 	app.mouse_button = 0;
 	app.last_x = 0;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fdf_bonus.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mhaddadi <mhaddadi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/12 00:00:00 by mhaddadi          #+#    #+#             */
-/*   Updated: 2025/01/12 00:00:00 by mhaddadi         ###   ########.fr       */
+/*   Updated: 2025/08/24 11:16:40 by mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 #include <fcntl.h>
 #include <math.h>
 #include "mlx.h"
+#include "libft.h"
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -49,6 +50,11 @@
 #define KEY_S 115
 #define KEY_D 100
 #define KEY_H 104
+#define KEY_I 105
+#define KEY_J 106
+#define KEY_K 107
+#define KEY_L 108
+#define KEY_SPACE 32
 #define KEY_1 49
 #define KEY_2 50
 #define KEY_3 51
@@ -65,6 +71,7 @@
 #define KEY_U 117
 #define KEY_I 105
 #define KEY_O 111
+#define KEY_C 99
 
 /* Animation keys */
 #define KEY_SPACE 32
@@ -77,6 +84,14 @@
 #define BTN_SCROLL_UP 4
 #define BTN_SCROLL_DOWN 5
 
+/* Color modes */
+#define COLOR_GRADIENT 0
+#define COLOR_RAINBOW 1
+#define COLOR_MONOCHROME 2
+#define COLOR_FIRE 3
+#define COLOR_ICE 4
+#define COLOR_MODES_COUNT 5
+
 /* MLX event numbers */
 #define EVENT_DESTROY 17
 
@@ -86,47 +101,6 @@
 #define MASK_BUTTON_PRESS     4L
 #define MASK_BUTTON_RELEASE   8L
 #define MASK_POINTER_MOTION   64L
-
-/* UI constants */
-#define UI_BAR_Y 8
-#define UI_BAR_H 28
-#define UI_BTN_W 60
-#define UI_BTN_H 20
-#define UI_BTN_SP 8
-
-/* Game constants */
-#define COLOR_MODE_HEIGHT 0
-#define COLOR_MODE_RAINBOW 1
-#define COLOR_MODE_STATIC 2
-#define QUALITY_LOW 0
-#define QUALITY_MED 1
-#define QUALITY_HIGH 2
-
-/* Advanced rendering modes */
-#define RENDER_WIREFRAME 0
-#define RENDER_FILLED 1
-#define RENDER_TEXTURED 2
-#define RENDER_GRADIENT 3
-#define RENDER_HEIGHTMAP 4
-
-/* Lighting system */
-#define LIGHT_NONE 0
-#define LIGHT_AMBIENT 1
-#define LIGHT_DIRECTIONAL 2
-#define LIGHT_POINT 3
-
-/* Post-processing effects */
-#define FX_NONE 0
-#define FX_BLUR 1
-#define FX_GLOW 2
-#define FX_EDGE 3
-#define FX_VINTAGE 4
-
-/* Particle system */
-#define MAX_PARTICLES 1000
-#define PARTICLE_SNOW 0
-#define PARTICLE_RAIN 1
-#define PARTICLE_FIRE 2
 
 /* Basic data structures */
 
@@ -147,23 +121,10 @@ typedef struct s_proj_params
 {
 	int		x;
 	int		y;
-	int		z;
+	double	z;
 	double	*sx;
 	double	*sy;
 }			t_proj_params;
-
-typedef struct s_game
-{
-	int		animation_mode;
-	double	animation_speed;
-	double	rotation_speed;
-	int		color_mode;
-	int		wireframe_mode;
-	int		render_quality;
-	double	time_factor;
-	int		auto_rotate;
-	int		pulse_mode;
-}			t_game;
 
 typedef struct s_img
 {
@@ -185,15 +146,15 @@ typedef struct s_mlx
 
 typedef struct s_point
 {
-	int		z;
+	double	z;
 	int		color;
 }			t_point;
 
 typedef struct s_map
 {
+	t_point	**pts;
 	int		w;
 	int		h;
-	t_point	**pts;
 	int		zmin;
 	int		zmax;
 }			t_map;
@@ -221,83 +182,17 @@ typedef struct s_view
 	double	persp_d;
 }			t_view;
 
-typedef struct s_smooth
-{
-	int		active;
-	double	duration;
-	double	progress;
-	double	start_rot_x;
-	double	start_rot_y;
-	double	start_scale;
-	double	target_rot_x;
-	double	target_rot_y;
-	double	target_scale;
-}			t_smooth;
-
-/* Advanced lighting system */
-typedef struct s_light
-{
-	double	x;
-	double	y;
-	double	z;
-	double	intensity;
-	int		type;
-	int		color;
-	double	ambient;
-	double	diffuse;
-}			t_light;
-
-/* Particle system */
-typedef struct s_particle
-{
-	double	x;
-	double	y;
-	double	z;
-	double	vx;
-	double	vy;
-	double	vz;
-	double	life;
-	double	size;
-	int		color;
-	int		active;
-}			t_particle;
-
-typedef struct s_fx
-{
-	int		mode;
-	double	strength;
-	int		blur_radius;
-	double	glow_intensity;
-	int		vintage_sepia;
-	double	contrast;
-	double	brightness;
-}			t_fx;
-
 typedef struct s_app
 {
 	t_mlx	mlx;
 	t_map	map;
 	t_view	view;
-	t_game	game;
-	t_smooth smooth;
-	t_light	light;
-	t_fx	effects;
-	t_particle particles[MAX_PARTICLES];
-	int		particle_count;
-	int		render_mode;
-	int		running;
+	int		show_help;
+	int		demo_mode;
 	int		mouse_down;
 	int		mouse_button;
 	int		last_x;
 	int		last_y;
-	int		sel_x;
-	int		sel_y;
-	int		sel_valid;
-	int		press_x;
-	int		press_y;
-	int		move_accum;
-	int		show_help;
-	int		demo_mode;
 }			t_app;
 
 /* Bonus app structure for simplified bonus features */
@@ -308,12 +203,15 @@ typedef struct s_app_bonus
 	t_view	view;
 	int		show_help;
 	int		demo_mode;
+	int		color_mode;
 	int		mouse_down;
 	int		mouse_button;
 	int		last_x;
 	int		last_y;
 	int		keys_pressed[512];
 	int		key_repeat_enabled;
+	int		frame_skip_counter;
+	int		needs_rerender;
 }			t_app_bonus;
 
 /* main / lifecycle */
@@ -362,13 +260,15 @@ void	start_demo_mode(t_app *app);
 
 /* color utilities */
 int		pick_color(const t_point *p, const t_map *map);
+int		pick_color_mode(const t_point *p, const t_map *map, int color_mode);
+int		pick_color_bonus(const t_point *p, const t_map *map, const t_app_bonus *app);
 int		mix(int a, int b);
-int		get_rainbow_color(int z, int zmin, int zmax);
 
 /* drawing helpers */
 void	img_clear(t_img *img, int color);
 void	put_px(t_img *img, int x, int y, int color);
 void	draw_line_pts(t_img *img, t_point2d a, t_point2d b, int color);
+void	draw_line_pts_color(t_img *img, t_point2d a, t_point2d b, int color1, int color2);
 
 /* projection */
 void	project_point_safe(const t_view *v, t_proj_params *params);
@@ -400,6 +300,8 @@ int	hook_mouse_move_bonus(int x, int y, void *param);
 /* bonus rendering */
 void	render_wireframe_bonus_complete(t_app_bonus *app);
 void	rerender_bonus_complete(t_app_bonus *app);
+void	rerender_bonus_immediate(t_app_bonus *app);
+int		loop_hook_bonus(void *param);
 
 /* bonus overlay and display */
 void	draw_help_overlay_complete(t_app_bonus *app);

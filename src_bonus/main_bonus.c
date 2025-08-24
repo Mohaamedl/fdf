@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mhaddadi <mhaddadi@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 13:58:32 by mhaddadi          #+#    #+#             */
-/*   Updated: 2025/08/23 14:35:00 by mhaddadi         ###   ########.fr       */
+/*   Updated: 2025/08/23 23:21:28 by mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,24 +38,56 @@ int	hook_destroy_bonus(void *param)
 
 void	rerender_bonus_complete(t_app_bonus *app)
 {
+	// Always render immediately - NO frame skipping for responsive controls
+	// Modern computers can handle julia.fdf at full quality easily
 	render_wireframe_bonus_complete(app);
+	mlx_put_image_to_window(app->mlx.mlx, app->mlx.win, app->mlx.img.ptr, 0, 0);
 	draw_help_overlay_complete(app);
 	draw_status_display(app);
-	mlx_put_image_to_window(app->mlx.mlx, app->mlx.win, app->mlx.img.ptr, 0, 0);
 }
 
-// Initialize view with proper defaults
+// Force immediate rerender (for single events like projection change)
+void	rerender_bonus_immediate(t_app_bonus *app)
+{
+	app->frame_skip_counter = 0;
+	app->needs_rerender = 0;
+	
+	render_wireframe_bonus_complete(app);
+	mlx_put_image_to_window(app->mlx.mlx, app->mlx.win, app->mlx.img.ptr, 0, 0);
+	draw_help_overlay_complete(app);
+	draw_status_display(app);
+}
+
+// Initialize view with proper defaults and auto-scaling
 static void	init_view_bonus(t_app_bonus *app)
 {
+	double	scale_x, scale_y, auto_scale;
+
 	app->view.angle = M_PI / 6.0;
 	app->view.zscale = 1.0;
 	app->view.proj = PROJ_ISO;  // Start with isometric
-	app->view.rot_x = -M_PI / 6.0;  // Initial rotation
-	app->view.rot_y = M_PI / 4.0;
-	app->view.rot_z = 0.0;
-	recompute_view_fit((t_app *)app);  // Calculate fit
-	app->show_help = 1;  // Show help by default
+	app->view.rot_x = 0.0;      // No initial tilt
+	app->view.rot_y = 0.0;      // No initial rotation
+	app->view.rot_z = 0.0;      // No initial roll
+	
+	// Auto-scale based on map size to fit the screen nicely
+	scale_x = (WIN_W * 0.6) / app->map.w;
+	scale_y = (WIN_H * 0.6) / app->map.h;
+	auto_scale = (scale_x < scale_y) ? scale_x : scale_y;
+	
+	// Ensure minimum and maximum scale bounds
+	if (auto_scale < 0.5)
+		auto_scale = 0.5;
+	else if (auto_scale > 50.0)
+		auto_scale = 50.0;
+	
+	app->view.scale = auto_scale;
+	app->view.offset_x = WIN_W / 2;
+	app->view.offset_y = WIN_H / 2;
+	app->show_help = 0;  // Start with help hidden so wireframe is visible
 	app->demo_mode = 0;
+	app->frame_skip_counter = 0;
+	app->needs_rerender = 0;
 }
 
 int	main(int argc, char **argv)
@@ -74,6 +106,15 @@ int	main(int argc, char **argv)
 		return (1);
 	}
 	
+	// Initialize the MLX and other non-map parts
+	ft_memset(&app.mlx, 0, sizeof(t_mlx));
+	app.show_help = 0;
+	app.demo_mode = 0;
+	app.mouse_down = 0;
+	app.mouse_button = 0;
+	app.last_x = 0;
+	app.last_y = 0;
+	
 	if (!mlx_init_safe(&app.mlx))
 	{
 		free_map(&app.map);
@@ -82,12 +123,6 @@ int	main(int argc, char **argv)
 	}
 	
 	init_view_bonus(&app);
-	
-	// Initialize mouse state
-	app.mouse_down = 0;
-	app.mouse_button = 0;
-	app.last_x = 0;
-	app.last_y = 0;
 	
 	// Initialize key repeat system
 	int i = 0;

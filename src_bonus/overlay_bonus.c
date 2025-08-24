@@ -3,14 +3,12 @@
 /*                                                        :::      ::::::::   */
 /*   overlay_bonus.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mhaddadi <mhaddadi@student.42porto.com>    +#+  +:+       +#+        */
+/*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/23 13:58:38 by mhaddadi          #+#    #+#             */
-/*   Updated: 2025/08/23 13:58:56 by mhaddadi         ###   ########.fr       */
+/*   Updated: 2025/08/23 21:43:48 by mohamed          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-
 
 #include "fdf_bonus.h"
 
@@ -66,7 +64,7 @@ void	draw_controls_overlay(t_app *app)
 	draw_text_line(app, "ESC - Exit", y, 0xFF0000);
 }
 
-// Help overlay display for bonus app
+// Clean help overlay for bonus app
 void	draw_help_overlay_complete(t_app_bonus *app)
 {
 	int	y = 20;
@@ -76,15 +74,13 @@ void	draw_help_overlay_complete(t_app_bonus *app)
 	
 	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0x00FF00, "=== FdF BONUS CONTROLS ===");
 	y += 25;
-	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0x00FFFF, "Hold keys for smooth movement!");
-	y += 25;
-	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFF00, "PROJECTIONS:");
+	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFF00, "PROJECTION:");
 	y += 20;
 	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFFFF, "  P - Cycle projection (ISO/PAR/PER)");
 	y += 25;
 	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFF00, "ZOOM:");
 	y += 20;
-	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFFFF, "  +/- - Zoom (hold for smooth)");
+	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFFFF, "  +/- - Zoom in/out");
 	y += 15;
 	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFFFF, "  Mouse scroll - Zoom");
 	y += 25;
@@ -92,7 +88,7 @@ void	draw_help_overlay_complete(t_app_bonus *app)
 	y += 20;
 	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFFFF, "  WASD/Arrows - Move model");
 	y += 15;
-	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFFFF, "  Right mouse drag - Pan view");
+	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFFFF, "  Right mouse - Drag to move");
 	y += 25;
 	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFF00, "ROTATION:");
 	y += 20;
@@ -100,9 +96,9 @@ void	draw_help_overlay_complete(t_app_bonus *app)
 	y += 15;
 	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFFFF, "  Z/X - X-axis rotation");
 	y += 15;
-	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFFFF, "  R/T - Y-axis rotation");
+	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFFFF, "  R/F - Y-axis rotation");
 	y += 15;
-	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFFFF, "  Left mouse drag - Orbit camera");
+	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFFFF, "  Left mouse - Orbit camera");
 	y += 25;
 	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFFFF00, "EXTRA:");
 	y += 20;
@@ -115,43 +111,10 @@ void	draw_help_overlay_complete(t_app_bonus *app)
 	mlx_string_put(app->mlx.mlx, app->mlx.win, 10, y, 0xFF0000, "ESC - Exit");
 }
 
-void	draw_status_overlay(t_app *app)
-{
-	char	*proj_name;
-	int		x, y;
-
-	x = WIN_W - 200;
-	y = 20;
-	
-	if (app->view.proj == PROJ_ISO)
-		proj_name = "ISOMETRIC";
-	else if (app->view.proj == PROJ_PAR)
-		proj_name = "PARALLEL";
-	else
-		proj_name = "PERSPECTIVE";
-		
-	draw_text_line(app, "=== STATUS ===", y, 0x00FFFF);
-	y += 25;
-	
-	mlx_string_put(app->mlx.mlx, app->mlx.win, x, y, 0xFFFFFF, "Projection:");
-	y += 15;
-	mlx_string_put(app->mlx.mlx, app->mlx.win, x + 10, y, 0xFFFFFF, proj_name);
-	y += 25;
-	
-	mlx_string_put(app->mlx.mlx, app->mlx.win, x, y, 0xFFFFFF, "Scale:");
-	y += 20;
-	
-	mlx_string_put(app->mlx.mlx, app->mlx.win, x, y, 0xFFFFFF, "Z-Scale:");
-	y += 20;
-	
-	if (app->demo_mode)
-		mlx_string_put(app->mlx.mlx, app->mlx.win, x, y, 0x00FF00, "DEMO MODE ON");
-}
-
 // Status display for bonus app
 void	draw_status_display(t_app_bonus *app)
 {
-	int		x = WIN_W - 200;
+	int		x = WIN_W - 220;
 	int		y = 20;
 	char	*proj_name;
 	
@@ -165,15 +128,17 @@ void	draw_status_display(t_app_bonus *app)
 		
 	mlx_string_put(app->mlx.mlx, app->mlx.win, x, y, 0x00FFFF, "=== STATUS ===");
 	y += 25;
-	mlx_string_put(app->mlx.mlx, app->mlx.win, x, y, 0xFFFFFF, "Projection:");
+	mlx_string_put(app->mlx.mlx, app->mlx.win, x, y, 0xCCCCCC, "Projection:");
 	y += 15;
 	mlx_string_put(app->mlx.mlx, app->mlx.win, x + 10, y, 0xFFFFFF, proj_name);
-	y += 25;
-	mlx_string_put(app->mlx.mlx, app->mlx.win, x, y, 0xFFFFFF, "Scale: Interactive");
-	y += 20;
-	mlx_string_put(app->mlx.mlx, app->mlx.win, x, y, 0xFFFFFF, "Z-Scale: Interactive");
-	y += 25;
+	y += 30;
 	
 	if (app->demo_mode)
-		mlx_string_put(app->mlx.mlx, app->mlx.win, x, y, 0x00FF00, "DEMO MODE ON");
+	{
+		mlx_string_put(app->mlx.mlx, app->mlx.win, x, y, 0x00FF00, "DEMO MODE");
+		mlx_string_put(app->mlx.mlx, app->mlx.win, x, y + 15, 0x00FF00, "Auto rotating...");
+		y += 40;
+	}
+	
+	mlx_string_put(app->mlx.mlx, app->mlx.win, x, y, 0xCCCCCC, "Controls: Press H");
 }

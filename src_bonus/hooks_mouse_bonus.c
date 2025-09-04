@@ -132,7 +132,7 @@ int				hook_mouse_move_bonus(int x, int y, void *param)
 		// Blender-like orbit: horizontal = yaw (Y), vertical = pitch (X)
 		const double sens = 0.004;
 		app->view.rot_y += dx * sens;
-		app->view.rot_x += dy * sens;
+		app->view.rot_x -= dy * sens;
 
 		// Limit pitch to avoid flipping
 		const double max_pitch = 1.35; // ~77 degrees

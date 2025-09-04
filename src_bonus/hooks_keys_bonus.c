@@ -26,29 +26,23 @@ static int	throttle_ok_and_stamp(t_app_bonus *app, long min_ms)
 	return (1);
 }
 
-// Main key handler for bonus features
 int			hook_key_bonus_complete(int keycode, void *param)
 {
 	t_app_bonus *app = (t_app_bonus *)param;
 
 	if (!app)
 		return (0);
-
-	// Exit
 	if (keycode == KEY_ESC)
 		return (hook_destroy_bonus(app));
 
-	// Any manual interaction cancels demo (except toggling it)
 	if (keycode != KEY_SPACE)
 		app->demo_mode = 0;
 
-	// Projection toggle (cycle ISO -> PAR -> PER)
 	if (keycode == KEY_P)
 	{
 		app->view.proj = (app->view.proj + 1) % 3;
 		app->needs_redraw = 1;
 	}
-	// Translation with arrow keys
 	else if (keycode == KEY_LEFT)
 	{
 		app->view.offset_x -= 10;
@@ -69,7 +63,6 @@ int			hook_key_bonus_complete(int keycode, void *param)
 		app->view.offset_y += 10;
 		app->needs_redraw = 1;
 	}
-	// Translation with WASD (same as arrows)
 	else if (keycode == KEY_A)
 	{
 		app->view.offset_x -= 10;
@@ -90,7 +83,6 @@ int			hook_key_bonus_complete(int keycode, void *param)
 		app->view.offset_y += 10;
 		app->needs_redraw = 1;
 	}
-	// Zoom (+ and -)
 	else if (keycode == KEY_PLUS || keycode == KEY_KP_ADD)
 	{
 		app->view.scale *= 1.1;
@@ -105,7 +97,6 @@ int			hook_key_bonus_complete(int keycode, void *param)
 			app->view.scale = 0.02;
 		app->needs_redraw = 1;
 	}
-	// Rotation with throttle to avoid lag
 	else if (keycode == KEY_Q)
 	{
 		if (throttle_ok_and_stamp(app, 12))
@@ -154,7 +145,6 @@ int			hook_key_bonus_complete(int keycode, void *param)
 			app->needs_redraw = 1;
 		}
 	}
-	// Height scaling (Z/X and 1/2)
 	else if (keycode == KEY_Z || keycode == KEY_1)
 	{
 		app->view.zscale *= 1.1;
@@ -169,7 +159,6 @@ int			hook_key_bonus_complete(int keycode, void *param)
 			app->view.zscale = 0.1;
 		app->needs_redraw = 1;
 	}
-	// Reset view (R)
 	else if (keycode == KEY_R)
 	{
 		double scale_x = (WIN_W * 0.6) / app->map.w;
@@ -189,19 +178,16 @@ int			hook_key_bonus_complete(int keycode, void *param)
 		app->view.proj = PROJ_ISO;
 		app->needs_redraw = 1;
 	}
-	// Help overlay (H)
 	else if (keycode == KEY_H)
 	{
 		app->show_help = !app->show_help;
 		app->needs_redraw = 1;
 	}
-	// Demo mode toggle (SPACE)
 	else if (keycode == KEY_SPACE)
 	{
 		app->demo_mode = !app->demo_mode;
 		app->needs_redraw = 1;
 	}
-	// Color cycling (C)
 	else if (keycode == KEY_C)
 	{
 		app->color_mode = (app->color_mode + 1) % 5;
@@ -210,7 +196,6 @@ int			hook_key_bonus_complete(int keycode, void *param)
 	return (0);
 }
 
-// Key release handler
 int			hook_key_release_bonus(int keycode, void *param)
 {
 	(void)keycode;
@@ -218,7 +203,6 @@ int			hook_key_release_bonus(int keycode, void *param)
 	return (0);
 }
 
-// Loop hook for demo mode and coalesced redraws
 int			loop_hook_bonus(void *param)
 {
 	t_app_bonus *app = (t_app_bonus *)param;
@@ -245,8 +229,6 @@ int			loop_hook_bonus(void *param)
 			app->view.last_render_time = now;
 			app->needs_redraw = 0;
 			rerender_bonus_complete(app);
-
-			// FPS calculation: count frames and update once per ~1s
 			frame_count++;
 			if (fps_last.tv_sec == 0 && fps_last.tv_usec == 0)
 				fps_last = now;

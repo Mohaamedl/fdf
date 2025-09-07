@@ -16,7 +16,7 @@ OBJ_BONUS_DIR = obj_bonus
 SRC = main.c hooks.c
 
 # Bonus sources (minimal, using shared code from src when possible)
-SRC_BONUS = main_bonus.c utils_main_bonus.c render_bonus_complete.c hooks_keys_bonus.c hooks_mouse_bonus.c overlay_bonus.c demo_mode_bonus.c utils_bonus.c hooks_utils_bonus.c
+SRC_BONUS = main_bonus.c main_bonus_utils.c render_bonus.c hooks_keys_bonus.c hooks_mouse_bonus.c overlay_bonus.c demo_mode_bonus.c utils_bonus.c hooks_utils_bonus.c render_utils_bonus.c render_setup_bonus.c
 
 # Shared sources that both mandatory and bonus need
 SHARED_SRC = parse.c render.c render_utils.c mlx_init.c view.c projection.c color.c utils.c parse_utils.c

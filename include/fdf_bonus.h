@@ -101,6 +101,14 @@ typedef struct s_app_bonus
   int			needs_redraw;
 }	t_app_bonus;
 
+typedef struct s_point_setup
+{
+	t_app_bonus	*app;
+	int			x;
+	int			y;
+	int			is_horizontal;
+}	t_point_setup;
+
 int			hook_key_bonus_complete(int key, void *param);
 int			hook_key_release_bonus(int key, void *param);
 int			loop_hook_bonus(void *param);
@@ -123,5 +131,12 @@ void		render_wireframe_bonus_complete(t_app_bonus *app);
 void		init_app_vars(t_app_bonus *app);
 void		setup_hooks(t_app_bonus *app);
 void		init_view_bonus(t_app_bonus *app);
+t_point3d	apply_rotations(t_point3d p, double cx, double cy, t_view *view);
+void		project_perspective(double *proj_x, double *proj_y, t_point3d rotated);
+int			should_cull_line(t_point2d pt1, t_point2d pt2);
+void		setup_horizontal_points(t_app_bonus *app, int x, int y,
+			t_point2d *pts);
+void		setup_vertical_points(t_app_bonus *app, int x, int y,
+			t_point2d *pts);
 
 #endif

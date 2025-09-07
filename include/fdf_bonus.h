@@ -120,5 +120,8 @@ void		draw_movement_controls(t_app *app, int *y, int color);
 t_point2d	project_bonus_complete(t_point3d p3d, t_view *view, t_map *map);
 int			pick_color_mode(const t_point *p, const t_map *map, int mode);
 void		render_wireframe_bonus_complete(t_app_bonus *app);
+void		init_app_vars(t_app_bonus *app);
+void		setup_hooks(t_app_bonus *app);
+void		init_view_bonus(t_app_bonus *app);
 
 #endif

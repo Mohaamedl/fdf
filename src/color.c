@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   color.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mhaddadi <mhaddadi@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/23 13:47:22 by mhaddadi          #+#    #+#             */
-/*   Updated: 2025/08/24 20:48:18 by mohamed          ###   ########.fr       */
+/*   Created: 2025/09/08 18:55:04 by mhaddadi          #+#    #+#             */
+/*   Updated: 2025/09/08 18:56:15 by mhaddadi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,6 @@ int	pick_color_mode(const t_point *p, const t_map *map, int color_mode)
 {
 	double	percent;
 
-	// Mode 0: honor explicit per-point color if present
-	// Modes >0: override with selected scheme
 	if (color_mode == 0 && p->color != -1)
 		return (p->color);
 	percent = get_percent(p->z, map);
@@ -68,5 +66,3 @@ int	pick_color(const t_point *p, const t_map *map)
 		return (p->color);
 	return (get_scheme_color(get_percent(p->z, map), 0));
 }
-
-/* Bonus uses pick_color_mode directly. */

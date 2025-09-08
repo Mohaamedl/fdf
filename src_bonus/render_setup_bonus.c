@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   render_setup_bonus.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mhaddadi <mhaddadi@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/07 20:30:00 by mohamed           #+#    #+#             */
-/*   Updated: 2025/09/07 20:30:00 by mohamed          ###   ########.fr       */
+/*   Created: 2025/09/07 20:25:06 by mhaddadi          #+#    #+#             */
+/*   Updated: 2025/09/07 20:25:16 by mhaddadi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf_bonus.h"
+#include "../include/fdf_bonus.h"
 
 int	should_cull_line(t_point2d pt1, t_point2d pt2)
 {

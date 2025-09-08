@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   render_utils_bonus.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mhaddadi <mhaddadi@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/07 20:00:00 by mohamed           #+#    #+#             */
-/*   Updated: 2025/09/07 20:00:00 by mohamed          ###   ########.fr       */
+/*   Created: 2025/09/07 20:24:40 by mhaddadi          #+#    #+#             */
+/*   Updated: 2025/09/07 20:24:52 by mhaddadi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf_bonus.h"
+#include "../include/fdf_bonus.h"
 
 static t_point3d	rotate_point_x(t_point3d p, double cosx, double sinx)
 {

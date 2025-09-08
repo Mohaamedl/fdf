@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mhaddadi <mhaddadi@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/23 13:58:32 by mhaddadi          #+#    #+#             */
-/*   Updated: 2025/08/24 20:35:40 by mohamed          ###   ########.fr       */
+/*   Created: 2025/09/07 20:23:18 by mhaddadi          #+#    #+#             */
+/*   Updated: 2025/09/07 20:23:32 by mhaddadi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf_bonus.h"
+#include "../include/fdf_bonus.h"
 #include <sys/time.h>
 
 void	app_destroy_bonus(t_app_bonus *app, int code)

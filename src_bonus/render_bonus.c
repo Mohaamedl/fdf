@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   render_bonus_complete.c                            :+:      :+:    :+:   */
+/*   render_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mhaddadi <mhaddadi@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/23 13:58:43 by mhaddadi          #+#    #+#             */
-/*   Updated: 2025/08/24 20:35:40 by mohamed          ###   ########.fr       */
+/*   Created: 2025/09/07 20:25:28 by mhaddadi          #+#    #+#             */
+/*   Updated: 2025/09/07 20:25:37 by mhaddadi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf_bonus.h"
+#include "../include/fdf_bonus.h"
 
 static void	setup_projection_vars(t_point3d p3d, t_view *view, t_map *map,
 	t_point3d *rotated)

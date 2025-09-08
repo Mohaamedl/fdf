@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fdf_bonus.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mhaddadi <mhaddadi@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/12 00:00:00 by mhaddadi          #+#    #+#             */
-/*   Updated: 2025/08/24 20:48:18 by mohamed          ###   ########.fr       */
+/*   Created: 2025/09/08 18:53:28 by mhaddadi          #+#    #+#             */
+/*   Updated: 2025/09/08 18:53:32 by mhaddadi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,5 +138,23 @@ void		setup_horizontal_points(t_app_bonus *app, int x, int y,
 			t_point2d *pts);
 void		setup_vertical_points(t_app_bonus *app, int x, int y,
 			t_point2d *pts);
+void		handle_movement_keys(int keycode, t_app_bonus *app);
+void		handle_zoom_keys(int keycode, t_app_bonus *app);
+void		handle_rotation_keys(int keycode, t_app_bonus *app);
+void		handle_xyz_rotation_keys(int keycode, t_app_bonus *app);
+void		handle_zscale_keys(int keycode, t_app_bonus *app);
+void		reset_view(t_app_bonus *app);
+int			throttle_ok_and_stamp(t_app_bonus *app, long min_ms);
+int			handle_other_keys(int keycode, t_app_bonus *app);
+void		handle_redraw(t_app_bonus *app, int *frame_count,
+			struct timeval *fps_last);
+void		handle_scroll_zoom(t_app_bonus *app, int button, int x, int y);
+void		handle_mouse_button_press(t_app_bonus *app, int button, int x,
+			int y);
+long		get_target_ms(t_app_bonus *app);
+int			check_mouse_throttle(t_app_bonus *app);
+void		handle_left_mouse_drag(t_app_bonus *app, int dx, int dy);
+void		handle_right_mouse_drag(t_app_bonus *app, int dx, int dy);
+void		handle_middle_mouse_drag(t_app_bonus *app, int dx);
 
 #endif

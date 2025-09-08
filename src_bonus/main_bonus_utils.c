@@ -1,17 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   hooks_utils_bonus.c                                :+:      :+:    :+:   */
+/*   main_bonus_utils.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mohamed <mohamed@student.42.fr>            +#+  +:+       +#+        */
+/*   By: mhaddadi <mhaddadi@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/08/24 20:35:00 by mohamed           #+#    #+#             */
-/*   Updated: 2025/08/24 20:35:00 by mohamed          ###   ########.fr       */
+/*   Created: 2025/09/07 20:23:49 by mhaddadi          #+#    #+#             */
+/*   Updated: 2025/09/07 20:24:10 by mhaddadi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf_bonus.h"
-#include <sys/time.h>
+#include "../include/fdf_bonus.h"
 
 void	init_app_vars(t_app_bonus *app)
 {

@@ -12,6 +12,15 @@
 
 #include "../include/fdf.h"
 
+int	should_cull_line(t_point2d p1, t_point2d p2)
+{
+	if ((p1.x < -100 && p2.x < -100) || (p1.x > WIN_W + 100 && p2.x > WIN_W + 100))
+		return (1);
+	if ((p1.y < -100 && p2.y < -100) || (p1.y > WIN_H + 100 && p2.y > WIN_H + 100))
+		return (1);
+	return (0);
+}
+
 int	hex_color_to_int(const char *hex_str)
 {
 	int		result;
@@ -20,7 +29,8 @@ int	hex_color_to_int(const char *hex_str)
 
 	result = 0;
 	i = 0;
-	while (i < 6 && hex_str[i])
+	while (hex_str[i] && (hex_str[i] != ' ' && hex_str[i] != '\t' 
+		&& hex_str[i] != '\n' && hex_str[i] != '\r'))
 	{
 		c = hex_str[i];
 		result = result << 4;
@@ -30,6 +40,8 @@ int	hex_color_to_int(const char *hex_str)
 			result += (c - 'A' + 10);
 		else if (c >= 'a' && c <= 'f')
 			result += (c - 'a' + 10);
+		else
+			break ;
 		i++;
 	}
 	return (result);
@@ -95,4 +107,53 @@ void	init_map_parsing(t_map *map)
 {
 	map->zmin = 2147483647;
 	map->zmax = -2147483648;
+}
+
+void	swap_lines(t_line_depth *a, t_line_depth *b)
+{
+	t_line_depth	temp;
+
+	temp = *a;
+	*a = *b;
+	*b = temp;
+}
+
+int	partition_lines(t_line_depth *lines, int low, int high)
+{
+	double			pivot;
+	int				i;
+	int				j;
+
+	pivot = lines[high].avg_depth;
+	i = low - 1;
+	j = low;
+	while (j < high)
+	{
+		if (lines[j].avg_depth <= pivot)
+		{
+			i++;
+			swap_lines(&lines[i], &lines[j]);
+		}
+		j++;
+	}
+	swap_lines(&lines[i + 1], &lines[high]);
+	return (i + 1);
+}
+
+void	quicksort_lines(t_line_depth *lines, int low, int high)
+{
+	int	pi;
+
+	if (low < high)
+	{
+		pi = partition_lines(lines, low, high);
+		quicksort_lines(lines, low, pi - 1);
+		quicksort_lines(lines, pi + 1, high);
+	}
+}
+
+void	sort_lines_by_depth(t_line_depth *lines, int count)
+{
+	if (count > 1)
+		quicksort_lines(lines, 0, count - 1);
 }

@@ -12,6 +12,54 @@
 
 #include "../include/fdf_bonus.h"
 
+static void	collect_horizontal_line_bonus(t_app_bonus *app, int x, int y, 
+				t_line_depth *lines, int *count)
+{
+	t_point2d	pts[2];
+	const t_point	*p1;
+	const t_point	*p2;
+
+	if (!app || !app->map.pts || x + 1 >= app->map.w || y >= app->map.h)
+		return ;
+	if (!app->map.pts[y])
+		return ;
+	p1 = &app->map.pts[y][x];
+	p2 = &app->map.pts[y][x + 1];
+	setup_horizontal_points(app, x, y, pts);
+	if (should_cull_line(pts[0], pts[1]))
+		return ;
+	lines[*count].p1 = pts[0];
+	lines[*count].p2 = pts[1];
+	lines[*count].color1 = pick_color(p1, &app->map);
+	lines[*count].color2 = pick_color(p2, &app->map);
+	lines[*count].avg_depth = (pts[0].y + pts[1].y) / 2.0;
+	(*count)++;
+}
+
+static void	collect_vertical_line_bonus(t_app_bonus *app, int x, int y, 
+				t_line_depth *lines, int *count)
+{
+	t_point2d	pts[2];
+	const t_point	*p1;
+	const t_point	*p2;
+
+	if (!app || !app->map.pts || y + 1 >= app->map.h || x >= app->map.w)
+		return ;
+	if (!app->map.pts[y] || !app->map.pts[y + 1])
+		return ;
+	p1 = &app->map.pts[y][x];
+	p2 = &app->map.pts[y + 1][x];
+	setup_vertical_points(app, x, y, pts);
+	if (should_cull_line(pts[0], pts[1]))
+		return ;
+	lines[*count].p1 = pts[0];
+	lines[*count].p2 = pts[1];
+	lines[*count].color1 = pick_color(p1, &app->map);
+	lines[*count].color2 = pick_color(p2, &app->map);
+	lines[*count].avg_depth = (pts[0].y + pts[1].y) / 2.0;
+	(*count)++;
+}
+
 static void	setup_projection_vars(t_point3d p3d, t_view *view, t_map *map,
 	t_point3d *rotated)
 {
@@ -39,13 +87,11 @@ t_point2d	project_bonus_complete(t_point3d p3d, t_view *view, t_map *map)
 		proj_x = (rotated.x - rotated.y) * cos(M_PI / 6.0);
 		proj_y = (rotated.x + rotated.y) * sin(M_PI / 6.0) - rotated.z;
 	}
-	else if (view->proj == PROJ_PAR)
+	else
 	{
 		proj_x = rotated.x;
-		proj_y = rotated.y;
+		proj_y = rotated.y - rotated.z;
 	}
-	else
-		project_perspective(&proj_x, &proj_y, rotated);
 	proj_x *= view->scale;
 	proj_y *= view->scale;
 	proj_x += view->offset_x;
@@ -55,54 +101,42 @@ t_point2d	project_bonus_complete(t_point3d p3d, t_view *view, t_map *map)
 	return (p2d);
 }
 
-static void	draw_horizontal_line_bonus(t_app_bonus *app, int x, int y)
-{
-	t_point2d	pts[2];
-
-	if (!app || !app->map.pts || x + 1 >= app->map.w || y >= app->map.h)
-		return ;
-	if (!app->map.pts[y])
-		return ;
-	setup_horizontal_points(app, x, y, pts);
-	if (should_cull_line(pts[0], pts[1]))
-		return ;
-	draw_line_pts_color(&app->mlx.img, pts[0], pts[1],
-		pick_color_mode(&app->map.pts[y][x], &app->map, app->color_mode));
-}
-
-static void	draw_vertical_line_bonus(t_app_bonus *app, int x, int y)
-{
-	t_point2d	pts[2];
-
-	if (!app || !app->map.pts || y + 1 >= app->map.h || x >= app->map.w)
-		return ;
-	if (!app->map.pts[y] || !app->map.pts[y + 1])
-		return ;
-	setup_vertical_points(app, x, y, pts);
-	if (should_cull_line(pts[0], pts[1]))
-		return ;
-	draw_line_pts_color(&app->mlx.img, pts[0], pts[1],
-		pick_color_mode(&app->map.pts[y][x], &app->map, app->color_mode));
-}
-
 void	render_wireframe_bonus_complete(t_app_bonus *app)
 {
-	int	x;
-	int	y;
+	t_line_depth	*lines;
+	int				max_lines;
+	int				count;
+	int				x;
+	int				y;
+	int				i;
 
 	if (!app || !app->map.pts)
 		return ;
+	max_lines = (app->map.w - 1) * app->map.h + app->map.w * (app->map.h - 1);
+	lines = malloc(sizeof(t_line_depth) * max_lines);
+	if (!lines)
+		return ;
 	img_clear(&app->mlx.img, 0x000000);
+	count = 0;
 	y = 0;
 	while (y < app->map.h)
 	{
 		x = 0;
 		while (x < app->map.w)
 		{
-			draw_horizontal_line_bonus(app, x, y);
-			draw_vertical_line_bonus(app, x, y);
+			collect_horizontal_line_bonus(app, x, y, lines, &count);
+			collect_vertical_line_bonus(app, x, y, lines, &count);
 			x++;
 		}
 		y++;
 	}
+	sort_lines_by_depth(lines, count);
+	i = 0;
+	while (i < count)
+	{
+		draw_line_gradient(&app->mlx.img, lines[i].p1, lines[i].p2,
+			lines[i].color1, lines[i].color2);
+		i++;
+	}
+	free(lines);
 }

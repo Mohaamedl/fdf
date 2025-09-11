@@ -32,9 +32,11 @@ int	parse_token_direct(const char *tok, int len, int *z, int *color)
 	if (comma_pos >= 0)
 	{
 		*z = string_to_int_len(tok, comma_pos);
-		if (comma_pos + 3 < len && tok[comma_pos + 1] == '0'
+		if (comma_pos + 2 < len && tok[comma_pos + 1] == '0'
 			&& (tok[comma_pos + 2] == 'x' || tok[comma_pos + 2] == 'X'))
+		{
 			*color = hex_color_to_int(tok + comma_pos + 3);
+		}
 	}
 	else
 		*z = string_to_int_len(tok, len);

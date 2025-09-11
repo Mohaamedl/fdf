@@ -126,13 +126,11 @@ char		*get_projection_name(int proj);
 void		draw_basic_controls(t_app *app, int *y, int color);
 void		draw_movement_controls(t_app *app, int *y, int color);
 t_point2d	project_bonus_complete(t_point3d p3d, t_view *view, t_map *map);
-int			pick_color_mode(const t_point *p, const t_map *map, int mode);
 void		render_wireframe_bonus_complete(t_app_bonus *app);
 void		init_app_vars(t_app_bonus *app);
 void		setup_hooks(t_app_bonus *app);
 void		init_view_bonus(t_app_bonus *app);
 t_point3d	apply_rotations(t_point3d p, double cx, double cy, t_view *view);
-void		project_perspective(double *proj_x, double *proj_y, t_point3d rotated);
 int			should_cull_line(t_point2d pt1, t_point2d pt2);
 void		setup_horizontal_points(t_app_bonus *app, int x, int y,
 			t_point2d *pts);

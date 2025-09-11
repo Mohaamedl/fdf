@@ -12,30 +12,35 @@
 
 #include "../include/fdf.h"
 
-static int	get_scheme_color(double percent, int scheme)
+static t_color	create_color(unsigned char r, unsigned char g, unsigned char b)
 {
-	static const int	colors[5][4] = {
-	{0x432371, 0x714674, 0xCC8B79, 0xFAAE7B},
-	{0xFF0000, 0xFFFF00, 0x00FF00, 0x8000FF},
-	{0x000000, 0x808080, 0xC0C0C0, 0xFFFFFF},
-	{0x000000, 0x8B0000, 0xFF4500, 0xFFFF00},
-	{0x000080, 0x4169E1, 0x87CEEB, 0xF0F8FF}
-	};
-	int					index;
+	t_color	color;
 
-	if (scheme == 2)
-	{
-		index = (int)(255 * percent);
-		if (index > 255)
-			index = 255;
-		if (index < 0)
-			index = 0;
-		return ((index << 16) | (index << 8) | index);
-	}
-	index = (int)(percent * 4);
-	if (index >= 4)
-		index = 3;
-	return (colors[scheme][index]);
+	color.r = r;
+	color.g = g;
+	color.b = b;
+	color.a = 255;
+	return (color);
+}
+
+static int	color_to_int(t_color color)
+{
+	return ((color.r << 16) | (color.g << 8) | color.b);
+}
+
+static t_color	lerp_colors(t_color c1, t_color c2, double t)
+{
+	t_color	result;
+
+	if (t <= 0.0)
+		return (c1);
+	if (t >= 1.0)
+		return (c2);
+	result.r = (unsigned char)(c1.r + t * (c2.r - c1.r));
+	result.g = (unsigned char)(c1.g + t * (c2.g - c1.g));
+	result.b = (unsigned char)(c1.b + t * (c2.b - c1.b));
+	result.a = 255;
+	return (result);
 }
 
 static double	get_percent(int z, const t_map *map)
@@ -48,21 +53,70 @@ static double	get_percent(int z, const t_map *map)
 	return ((double)(z - map->zmin) / range);
 }
 
-int	pick_color_mode(const t_point *p, const t_map *map, int color_mode)
+static int	get_elevation_color(double percent)
 {
-	double	percent;
+	t_color	low;
+	t_color	high;
+	t_color	result;
 
-	if (color_mode == 0 && p->color != -1)
-		return (p->color);
-	percent = get_percent(p->z, map);
-	if (color_mode < 0 || color_mode > 4)
-		color_mode = 0;
-	return (get_scheme_color(percent, color_mode));
+	low = create_color(0, 0, 128);
+	high = create_color(255, 0, 0);
+	result = lerp_colors(low, high, percent);
+	return (color_to_int(result));
 }
 
 int	pick_color(const t_point *p, const t_map *map)
 {
 	if (p->color != -1)
+	{
 		return (p->color);
-	return (get_scheme_color(get_percent(p->z, map), 0));
+	}
+	return (get_elevation_color(get_percent(p->z, map)));
+}
+
+int	interpolate_line_color(const t_point *p1, const t_point *p2, 
+			const t_map *map, double t)
+{
+	int		color1;
+	int		color2;
+	t_color	c1;
+	t_color	c2;
+	t_color	result;
+
+	color1 = pick_color(p1, map);
+	color2 = pick_color(p2, map);
+	if (color1 == color2)
+		return (color1);
+	c1.r = (color1 >> 16) & 0xFF;
+	c1.g = (color1 >> 8) & 0xFF;
+	c1.b = color1 & 0xFF;
+	c1.a = 255;
+	c2.r = (color2 >> 16) & 0xFF;
+	c2.g = (color2 >> 8) & 0xFF;
+	c2.b = color2 & 0xFF;
+	c2.a = 255;
+	result = lerp_colors(c1, c2, t);
+	return (color_to_int(result));
+}
+
+int	interpolate_colors_direct(int color1, int color2, double t)
+{
+	t_color	c1;
+	t_color	c2;
+	t_color	result;
+
+	if (t <= 0.0)
+		return (color1);
+	if (t >= 1.0)
+		return (color2);
+	c1.r = (color1 >> 16) & 0xFF;
+	c1.g = (color1 >> 8) & 0xFF;
+	c1.b = color1 & 0xFF;
+	c1.a = 255;
+	c2.r = (color2 >> 16) & 0xFF;
+	c2.g = (color2 >> 8) & 0xFF;
+	c2.b = color2 & 0xFF;
+	c2.a = 255;
+	result = lerp_colors(c1, c2, t);
+	return (color_to_int(result));
 }

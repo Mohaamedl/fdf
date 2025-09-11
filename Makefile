@@ -1,8 +1,8 @@
 NAME = fdf
 NAME_BONUS = fdf_bonus
 CC = cc
-CFLAGS = -Wall -Wextra -Werror -Iinclude -Imlx -Ilibft/inc
-LDFLAGS = -L. -lmlx_Linux -lXext -lX11 -lm -lz
+CFLAGS = -Wall -Wextra -Werror -Iinclude -Imlx -Ilibft/inc -O3
+LDFLAGS = -L. -lmlx_Linux -lXext -lX11 -lm -lz -O3
 
 LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a

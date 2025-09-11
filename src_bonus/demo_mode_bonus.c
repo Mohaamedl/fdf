@@ -40,7 +40,7 @@ static void	update_view_params(t_app_bonus *app, double time,
 	app->view.scale = base_scale + sin(time) * (base_scale * 0.15);
 	app->view.zscale = 1.0 + sin(time * 0.7) * 0.3;
 	if (frame_count % 300 == 0)
-		app->view.proj = (app->view.proj + 1) % 3;
+		app->view.proj = (app->view.proj + 1) % 2;
 	if (frame_count % 2 == 0)
 		app->needs_redraw = 1;
 }
@@ -58,10 +58,4 @@ void	demo_mode_update(t_app_bonus *app)
 	time += 0.02;
 	frame_count++;
 	update_view_params(app, time, base_scale, frame_count);
-}
-
-void	app_message(t_app *app, char *msg)
-{
-	(void)app;
-	(void)msg;
 }

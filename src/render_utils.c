@@ -30,12 +30,15 @@ void	img_clear(t_img *img, int color)
 	}
 }
 
-static void	draw_line_low(t_img *img, t_point2d a, t_point2d b, int color)
+static void	draw_line_gradient_low(t_img *img, t_point2d a, t_point2d b, 
+				int color1, int color2)
 {
 	int	dx;
 	int	dy;
 	int	yi;
 	int	d;
+	int	total_pixels;
+	int	current_pixel;
 
 	dx = b.x - a.x;
 	dy = b.y - a.y;
@@ -46,8 +49,12 @@ static void	draw_line_low(t_img *img, t_point2d a, t_point2d b, int color)
 		dy = -dy;
 	}
 	d = 2 * dy - dx;
+	total_pixels = dx;
+	current_pixel = 0;
 	while (a.x <= b.x)
 	{
+		double t = (double)current_pixel / total_pixels;
+		int color = interpolate_colors_direct(color1, color2, t);
 		put_px(img, a.x, a.y, color);
 		if (d > 0)
 		{
@@ -56,15 +63,19 @@ static void	draw_line_low(t_img *img, t_point2d a, t_point2d b, int color)
 		}
 		d += 2 * dy;
 		a.x++;
+		current_pixel++;
 	}
 }
 
-static void	draw_line_high(t_img *img, t_point2d a, t_point2d b, int color)
+static void	draw_line_gradient_high(t_img *img, t_point2d a, t_point2d b, 
+				int color1, int color2)
 {
 	int	dx;
 	int	dy;
 	int	xi;
 	int	d;
+	int	total_pixels;
+	int	current_pixel;
 
 	dx = b.x - a.x;
 	dy = b.y - a.y;
@@ -75,8 +86,12 @@ static void	draw_line_high(t_img *img, t_point2d a, t_point2d b, int color)
 		dx = -dx;
 	}
 	d = 2 * dx - dy;
+	total_pixels = dy;
+	current_pixel = 0;
 	while (a.y <= b.y)
 	{
+		double t = (double) (current_pixel / total_pixels * 2);
+		int color = interpolate_colors_direct(color1, color2, t);
 		put_px(img, a.x, a.y, color);
 		if (d > 0)
 		{
@@ -85,28 +100,25 @@ static void	draw_line_high(t_img *img, t_point2d a, t_point2d b, int color)
 		}
 		d += 2 * dx;
 		a.y++;
+		current_pixel++;
 	}
 }
 
-void	draw_line_pts(t_img *img, t_point2d a, t_point2d b, int color)
+void	draw_line_gradient(t_img *img, t_point2d a, t_point2d b, 
+			int color1, int color2)
 {
 	if (abs(b.y - a.y) < abs(b.x - a.x))
 	{
 		if (a.x > b.x)
-			draw_line_low(img, b, a, color);
+			draw_line_gradient_low(img, b, a, color2, color1);
 		else
-			draw_line_low(img, a, b, color);
+			draw_line_gradient_low(img, a, b, color1, color2);
 	}
 	else
 	{
 		if (a.y > b.y)
-			draw_line_high(img, b, a, color);
+			draw_line_gradient_high(img, b, a, color2, color1);
 		else
-			draw_line_high(img, a, b, color);
+			draw_line_gradient_high(img, a, b, color1, color2);
 	}
-}
-
-void	draw_line_pts_color(t_img *img, t_point2d a, t_point2d b, int color)
-{
-	draw_line_pts(img, a, b, color);
 }

@@ -12,17 +12,6 @@
 
 #include "../include/fdf_bonus.h"
 
-int	should_cull_line(t_point2d pt1, t_point2d pt2)
-{
-	if ((pt1.x < -100 && pt2.x < -100) || (pt1.x > WIN_W + 100
-			&& pt2.x > WIN_W + 100))
-		return (1);
-	if ((pt1.y < -100 && pt2.y < -100) || (pt1.y > WIN_H + 100
-			&& pt2.y > WIN_H + 100))
-		return (1);
-	return (0);
-}
-
 static void	create_3d_points(t_point_setup setup, t_point3d *pt1_3d,
 	t_point3d *pt2_3d)
 {

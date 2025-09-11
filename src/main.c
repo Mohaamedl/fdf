@@ -35,6 +35,10 @@ int	app_init(t_app *app, const char *path)
 		return (0);
 	if (!mlx_init_safe(&app->mlx))
 		return (free_map(&app->map), 0);
+	app->cache.lines = NULL;
+	app->cache.count = 0;
+	app->cache.capacity = 0;
+	app->cache.dirty = 1;
 	init_view_defaults(app);
 	setup_hooks(app);
 	return (1);
@@ -42,6 +46,8 @@ int	app_init(t_app *app, const char *path)
 
 void	app_destroy(t_app *app, int code)
 {
+	if (app->cache.lines)
+		free(app->cache.lines);
 	if (app->mlx.img.ptr)
 		mlx_destroy_image(app->mlx.mlx, app->mlx.img.ptr);
 	if (app->mlx.win)

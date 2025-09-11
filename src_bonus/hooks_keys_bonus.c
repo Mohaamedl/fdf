@@ -25,7 +25,7 @@ int	hook_key_bonus_complete(int keycode, void *param)
 		app->demo_mode = 0;
 	if (keycode == KEY_P)
 	{
-		app->view.proj = (app->view.proj + 1) % 3;
+		app->view.proj = (app->view.proj + 1) % 2;
 		app->needs_redraw = 1;
 	}
 	else if (keycode == KEY_LEFT || keycode == KEY_RIGHT || keycode == KEY_UP

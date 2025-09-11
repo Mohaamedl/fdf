@@ -42,6 +42,14 @@
 # define PROJ_PAR 1
 
 /* Basic structures */
+typedef struct s_color
+{
+	unsigned char	b;
+	unsigned char	g;
+	unsigned char	r;
+	unsigned char	a;
+}	t_color;
+
 typedef struct s_point
 {
 	double	z;
@@ -53,6 +61,27 @@ typedef struct s_point2d
 	int	x;
 	int	y;
 }	t_point2d;
+
+typedef struct s_line_depth
+{
+	t_point2d	p1;
+	t_point2d	p2;
+	int			color1;
+	int			color2;
+	double		avg_depth;
+}	t_line_depth;
+
+typedef struct s_render_cache
+{
+	t_line_depth	*lines;
+	int				count;
+	int				capacity;
+	double			last_rot_x;
+	double			last_rot_y;
+	double			last_rot_z;
+	double			last_scale;
+	int				dirty;
+}	t_render_cache;
 
 typedef struct s_map
 {
@@ -97,9 +126,10 @@ typedef struct s_view
 
 typedef struct s_app
 {
-	t_mlx	mlx;
-	t_map	map;
-	t_view	view;
+	t_mlx			mlx;
+	t_map			map;
+	t_view			view;
+	t_render_cache	cache;
 }	t_app;
 
 typedef struct s_proj_params
@@ -120,16 +150,21 @@ void	init_map_parsing(t_map *map);
 
 /* MLX functions */
 int		mlx_init_safe(t_mlx *mlx);
+int		should_cull_line(t_point2d p1, t_point2d p2);
 int		hex_color_to_int(const char *hex_str);
 int		string_to_int_len(const char *str, int len);
 int		parse_token_direct(const char *tok, int len, int *z, int *color);
+void	swap_lines(t_line_depth *a, t_line_depth *b);
+int		partition_lines(t_line_depth *lines, int low, int high);
+void	quicksort_lines(t_line_depth *lines, int low, int high);
+void	sort_lines_by_depth(t_line_depth *lines, int count);
 
 /* Rendering functions */
 void	render_wireframe(t_app *app);
 void	img_clear(t_img *img, int color);
 void	put_px(t_img *img, int x, int y, int color);
-void	draw_line_pts(t_img *img, t_point2d pt1, t_point2d pt2, int color);
-void	draw_line_pts_color(t_img *img, t_point2d a, t_point2d b, int color);
+void	draw_line_gradient(t_img *img, t_point2d a, t_point2d b, 
+			int color1, int color2);
 
 /* View functions */
 void	recompute_view_fit(t_app *app);
@@ -137,6 +172,9 @@ void	project_point_safe(const t_view *view, t_proj_params *params);
 
 /* Color functions */
 int		pick_color(const t_point *p, const t_map *map);
+int		interpolate_line_color(const t_point *p1, const t_point *p2, 
+			const t_map *map, double t);
+int		interpolate_colors_direct(int color1, int color2, double t);
 
 /* Hook functions */
 int		hook_key(int keycode, void *param);

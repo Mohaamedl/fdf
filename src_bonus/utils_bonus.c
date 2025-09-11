@@ -22,10 +22,8 @@ char	*get_projection_name(int proj)
 	if (proj == 0)
 		return ("Isometric");
 	else if (proj == 1)
-		return ("Perspective");
-	else if (proj == 2)
-		return ("Orthographic");
-	return ("Unknown");
+		return ("Parallel");
+	return ("Isometric");
 }
 
 void	draw_basic_controls(t_app *app, int *y, int color)

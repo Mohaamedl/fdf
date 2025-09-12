@@ -20,16 +20,27 @@ int	hex_color_to_int(const char *hex_str)
 
 	result = 0;
 	i = 0;
-	while (i < 6 && hex_str[i])
+	while (hex_str[i] && (hex_str[i] != ' ' && hex_str[i] != '\t' 
+		&& hex_str[i] != '\n' && hex_str[i] != '\r'))
 	{
 		c = hex_str[i];
-		result = result << 4;
 		if (c >= '0' && c <= '9')
+		{
+			result = result << 4;
 			result += (c - '0');
+		}
 		else if (c >= 'A' && c <= 'F')
+		{
+			result = result << 4;
 			result += (c - 'A' + 10);
+		}
 		else if (c >= 'a' && c <= 'f')
+		{
+			result = result << 4;
 			result += (c - 'a' + 10);
+		}
+		else
+			break ;
 		i++;
 	}
 	return (result);

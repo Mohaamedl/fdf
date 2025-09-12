@@ -12,7 +12,6 @@
 
 #include "../include/fdf.h"
 
-
 void	put_px(t_img *img, int x, int y, int color)
 {
 	char	*dst;
@@ -117,9 +116,4 @@ void	draw_line_pts(t_img *img, t_point2d a, t_point2d b, int color)
 		else
 			draw_line_high(img, a, b, color);
 	}
-}
-
-void	draw_line_pts_color(t_img *img, t_point2d a, t_point2d b, int color)
-{
-	draw_line_pts(img, a, b, color);
 }

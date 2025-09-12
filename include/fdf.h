@@ -145,10 +145,11 @@ char	*skip_whitespace(char *str);
 
 /* Rendering functions */
 void	render_wireframe(t_app *app);
+void	draw_horizontal_line(t_app *app, int x, int y);
+void	draw_vertical_line(t_app *app, int x, int y);
 void	img_clear(t_img *img, int color);
 void	put_px(t_img *img, int x, int y, int color);
 void	draw_line_pts(t_img *img, t_point2d pt1, t_point2d pt2, int color);
-void	draw_line_pts_color(t_img *img, t_point2d a, t_point2d b, int color);
 void	setup_line_data(t_line_gradient *line, t_img *img, t_point2d a,
 		t_point2d b);
 void	draw_line_with_colors(t_line_gradient *line, int c1, int c2);

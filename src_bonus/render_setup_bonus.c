@@ -33,19 +33,15 @@ static void	create_3d_points(t_point_setup setup, t_point3d *pt1_3d,
 	{
 		p1 = &setup.app->map.pts[setup.y][setup.x];
 		p2 = &setup.app->map.pts[setup.y][setup.x + 1];
-		*pt1_3d = (t_point3d){setup.x, setup.y,
-			p1->z * setup.app->view.zscale};
-		*pt2_3d = (t_point3d){setup.x + 1, setup.y,
-			p2->z * setup.app->view.zscale};
+		*pt1_3d = (t_point3d){setup.x, setup.y, p1->z};
+		*pt2_3d = (t_point3d){setup.x + 1, setup.y, p2->z};
 	}
 	else
 	{
 		p1 = &setup.app->map.pts[setup.y][setup.x];
 		p2 = &setup.app->map.pts[setup.y + 1][setup.x];
-		*pt1_3d = (t_point3d){setup.x, setup.y,
-			p1->z * setup.app->view.zscale};
-		*pt2_3d = (t_point3d){setup.x, setup.y + 1,
-			p2->z * setup.app->view.zscale};
+		*pt1_3d = (t_point3d){setup.x, setup.y, p1->z};
+		*pt2_3d = (t_point3d){setup.x, setup.y + 1, p2->z};
 	}
 }
 

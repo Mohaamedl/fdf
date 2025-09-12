@@ -72,38 +72,21 @@ void	handle_rotation_keys(int keycode, t_app_bonus *app)
 
 void	handle_xyz_rotation_keys(int keycode, t_app_bonus *app)
 {
-	if (keycode == KEY_I && throttle_ok_and_stamp(app, 12))
-	{
-		app->view.rot_x -= 0.1;
-		app->needs_redraw = 1;
-	}
-	else if (keycode == KEY_K && throttle_ok_and_stamp(app, 12))
-	{
-		app->view.rot_x += 0.1;
-		app->needs_redraw = 1;
-	}
-	else if (keycode == KEY_J && throttle_ok_and_stamp(app, 12))
-	{
-		app->view.rot_y -= 0.1;
-		app->needs_redraw = 1;
-	}
-	else if (keycode == KEY_L && throttle_ok_and_stamp(app, 12))
-	{
-		app->view.rot_y += 0.1;
-		app->needs_redraw = 1;
-	}
+	handle_x_rotation(keycode, app);
+	handle_y_rotation(keycode, app);
 }
 
 void	handle_zscale_keys(int keycode, t_app_bonus *app)
 {
-	if (keycode == KEY_Z || keycode == KEY_1)
+	if ((keycode == KEY_Z || keycode == KEY_1) && throttle_ok_and_stamp(app, 8))
 	{
 		app->view.zscale *= 1.1;
 		if (app->view.zscale > 100.0)
 			app->view.zscale = 100.0;
 		app->needs_redraw = 1;
 	}
-	else if (keycode == KEY_X || keycode == KEY_2)
+	else if ((keycode == KEY_X || keycode == KEY_2)
+		&& throttle_ok_and_stamp(app, 8))
 	{
 		app->view.zscale /= 1.1;
 		if (app->view.zscale < 0.1)

@@ -81,12 +81,16 @@ int	check_mouse_throttle(t_app_bonus *app)
 void	handle_left_mouse_drag(t_app_bonus *app, int dx, int dy)
 {
 	const double	sens = 0.004;
-	const double	max_pitch = 1.35;
+	const double	max_rot = 0.35;
 
 	app->view.rot_y += dx * sens;
 	app->view.rot_x -= dy * sens;
-	if (app->view.rot_x > max_pitch)
-		app->view.rot_x = max_pitch;
-	if (app->view.rot_x < -max_pitch)
-		app->view.rot_x = -max_pitch;
+	if (app->view.rot_x > max_rot)
+		app->view.rot_x = max_rot;
+	if (app->view.rot_x < -max_rot)
+		app->view.rot_x = -max_rot;
+	if (app->view.rot_y > max_rot)
+		app->view.rot_y = max_rot;
+	if (app->view.rot_y < -max_rot)
+		app->view.rot_y = -max_rot;
 }

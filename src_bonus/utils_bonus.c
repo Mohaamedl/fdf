@@ -22,9 +22,11 @@ char	*get_projection_name(int proj)
 	if (proj == 0)
 		return ("Isometric");
 	else if (proj == 1)
-		return ("Perspective");
+		return ("XY Plane (Top)");
 	else if (proj == 2)
-		return ("Orthographic");
+		return ("XZ Plane (Front)");
+	else if (proj == 3)
+		return ("YZ Plane (Side)");
 	return ("Unknown");
 }
 

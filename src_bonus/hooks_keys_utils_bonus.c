@@ -107,3 +107,11 @@ void	handle_redraw(t_app_bonus *app, int *frame_count,
 		}
 	}
 }
+
+void	handle_projection_change(t_app_bonus *app)
+{
+	app->view.proj = (app->view.proj + 1) % 4;
+	app->view.offset_x = WIN_W / 2;
+	app->view.offset_y = WIN_H / 2;
+	app->needs_redraw = 1;
+}

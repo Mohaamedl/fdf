@@ -2,7 +2,7 @@ NAME = fdf
 NAME_BONUS = fdf_bonus
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -Iinclude -Imlx -Ilibft/inc
-LDFLAGS = -L. -lmlx_Linux -lXext -lX11 -lm -lz
+LDFLAGS = -Lmlx -lmlx_Linux -lXext -lX11 -lm -lz
 
 LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
@@ -16,7 +16,7 @@ OBJ_BONUS_DIR = obj_bonus
 SRC = main.c hooks.c
 
 # Bonus sources (minimal, using shared code from src when possible)
-SRC_BONUS = main_bonus.c main_bonus_utils.c render_bonus.c hooks_keys_bonus.c hooks_mouse_bonus.c overlay_bonus.c demo_mode_bonus.c utils_bonus.c hooks_utils_bonus.c hooks_keys_utils_bonus.c hooks_mouse_utils_bonus.c render_utils_bonus.c render_setup_bonus.c
+SRC_BONUS = main_bonus.c main_bonus_utils.c render_bonus.c hooks_keys_bonus.c hooks_mouse_bonus.c overlay_bonus.c demo_mode_bonus.c utils_bonus.c hooks_utils_bonus.c hooks_keys_utils_bonus.c hooks_mouse_utils_bonus.c render_utils_bonus.c render_setup_bonus.c render_depth_bonus.c render_depth.c projection_utils_bonus.c rotation_utils_bonus.c
 
 # Shared sources that both mandatory and bonus need
 SHARED_SRC = parse.c render.c render_utils.c gradient.c gradient_wrapper.c color_utils.c mlx_init.c view.c projection.c color.c utils.c string_utils.c parse_utils.c

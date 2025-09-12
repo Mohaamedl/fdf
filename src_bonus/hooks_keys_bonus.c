@@ -24,10 +24,7 @@ int	hook_key_bonus_complete(int keycode, void *param)
 	if (keycode != KEY_SPACE)
 		app->demo_mode = 0;
 	if (keycode == KEY_P)
-	{
-		app->view.proj = (app->view.proj + 1) % 3;
-		app->needs_redraw = 1;
-	}
+		handle_projection_change(app);
 	else if (keycode == KEY_LEFT || keycode == KEY_RIGHT || keycode == KEY_UP
 		|| keycode == KEY_DOWN || keycode == KEY_A || keycode == KEY_D
 		|| keycode == KEY_W || keycode == KEY_S)

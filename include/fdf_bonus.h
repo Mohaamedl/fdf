@@ -22,6 +22,21 @@ typedef struct s_point3d
   double		z;
 }	t_point3d;
 
+typedef struct s_depth_line_bonus
+{
+	t_point2d	p1;
+	t_point2d	p2;
+	int			color1;
+	int			color2;
+	double		depth;
+}	t_depth_line_bonus;
+
+typedef struct s_z_range
+{
+	double	z_min;
+	double	z_max;
+}	t_z_range;
+
 /* Keycodes */
 # define KEY_LEFT		65361
 # define KEY_UP			65362
@@ -132,13 +147,17 @@ void		init_app_vars(t_app_bonus *app);
 void		setup_hooks(t_app_bonus *app);
 void		init_view_bonus(t_app_bonus *app);
 t_point3d	apply_rotations(t_point3d p, double cx, double cy, t_view *view);
-void		project_perspective(double *proj_x, double *proj_y, t_point3d rotated);
+void		apply_planar_projection(t_point3d p3d, t_view *view, t_map *map,
+			t_point2d *result);
 int			should_cull_line(t_point2d pt1, t_point2d pt2);
 void		setup_horizontal_points(t_app_bonus *app, int x, int y,
 			t_point2d *pts);
 void		setup_vertical_points(t_app_bonus *app, int x, int y,
 			t_point2d *pts);
 void		handle_movement_keys(int keycode, t_app_bonus *app);
+void		handle_projection_change(t_app_bonus *app);
+void		handle_x_rotation(int keycode, t_app_bonus *app);
+void		handle_y_rotation(int keycode, t_app_bonus *app);
 void		handle_zoom_keys(int keycode, t_app_bonus *app);
 void		handle_rotation_keys(int keycode, t_app_bonus *app);
 void		handle_xyz_rotation_keys(int keycode, t_app_bonus *app);
@@ -156,5 +175,18 @@ int			check_mouse_throttle(t_app_bonus *app);
 void		handle_left_mouse_drag(t_app_bonus *app, int dx, int dy);
 void		handle_right_mouse_drag(t_app_bonus *app, int dx, int dy);
 void		handle_middle_mouse_drag(t_app_bonus *app, int dx);
+int			should_render_first_bonus(t_app_bonus *app, int x, int y,
+			int is_horizontal);
+void		render_pass_bonus(t_app_bonus *app, int pass);
+void		draw_horizontal_line_bonus(t_app_bonus *app, int x, int y);
+void		draw_vertical_line_bonus(t_app_bonus *app, int x, int y);
+
+/* Depth sorting functions - bonus only */
+void		render_depth_sorted_bonus(t_app_bonus *app);
+double		calculate_depth_bonus(t_app_bonus *app, int x1, int y1, int x2,
+			int y2);
+int			is_line_visible_bonus(t_point2d p1, t_point2d p2);
+void		setup_3d_points(int coords[4], t_app_bonus *app, t_point3d *p1,
+			t_point3d *p2);
 
 #endif

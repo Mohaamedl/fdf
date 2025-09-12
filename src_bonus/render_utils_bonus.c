@@ -59,16 +59,3 @@ t_point3d	apply_rotations(t_point3d p, double cx, double cy, t_view *view)
 	result.y += cy;
 	return (result);
 }
-
-void	project_perspective(double *proj_x, double *proj_y, t_point3d rotated)
-{
-	double	d;
-	double	denom;
-
-	d = 800.0;
-	denom = rotated.z + d;
-	if (denom < 50.0)
-		denom = 50.0;
-	*proj_x = rotated.x * (d / denom);
-	*proj_y = rotated.y * (d / denom);
-}

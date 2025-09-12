@@ -29,7 +29,7 @@ static void	project_two_points(t_app *app, int coords[4], t_point2d *pts)
 	pts[1] = (t_point2d){(int)proj_coords[2], (int)proj_coords[3]};
 }
 
-static void	draw_horizontal_line(t_app *app, int x, int y)
+void	draw_horizontal_line(t_app *app, int x, int y)
 {
 	t_point2d		pts[2];
 	t_line_gradient	line;
@@ -49,7 +49,7 @@ static void	draw_horizontal_line(t_app *app, int x, int y)
 		pick_color(&app->map.pts[y][x + 1], &app->map));
 }
 
-static void	draw_vertical_line(t_app *app, int x, int y)
+void	draw_vertical_line(t_app *app, int x, int y)
 {
 	t_point2d		pts[2];
 	t_line_gradient	line;
@@ -83,8 +83,10 @@ void	render_wireframe(t_app *app)
 		x = 0;
 		while (x < app->map.w)
 		{
-			draw_horizontal_line(app, x, y);
-			draw_vertical_line(app, x, y);
+			if (x + 1 < app->map.w)
+				draw_horizontal_line(app, x, y);
+			if (y + 1 < app->map.h)
+				draw_vertical_line(app, x, y);
 			x++;
 		}
 		y++;

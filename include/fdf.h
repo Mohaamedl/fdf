@@ -74,6 +74,22 @@ typedef struct s_img
 	int		endian;
 }	t_img;
 
+typedef struct s_gradient_params
+{
+	int	color1;
+	int	color2;
+}	t_gradient_params;
+
+typedef struct s_line_gradient
+{
+	t_img		*img;
+	t_point2d	start;
+	t_point2d	end;
+	int			color1;
+	int			color2;
+}	t_line_gradient;
+
+
 typedef struct s_mlx
 {
 	void	*mlx;
@@ -123,6 +139,9 @@ int		mlx_init_safe(t_mlx *mlx);
 int		hex_color_to_int(const char *hex_str);
 int		string_to_int_len(const char *str, int len);
 int		parse_token_direct(const char *tok, int len, int *z, int *color);
+void	free_string_array(char **array);
+int		count_words(const char *str, char delimiter);
+char	*skip_whitespace(char *str);
 
 /* Rendering functions */
 void	render_wireframe(t_app *app);
@@ -130,6 +149,11 @@ void	img_clear(t_img *img, int color);
 void	put_px(t_img *img, int x, int y, int color);
 void	draw_line_pts(t_img *img, t_point2d pt1, t_point2d pt2, int color);
 void	draw_line_pts_color(t_img *img, t_point2d a, t_point2d b, int color);
+void	setup_line_data(t_line_gradient *line, t_img *img, t_point2d a,
+		t_point2d b);
+void	draw_line_with_colors(t_line_gradient *line, int c1, int c2);
+void	draw_gradient_line(t_line_gradient *line);
+int		lerp_color(int color1, int color2, double t);
 
 /* View functions */
 void	recompute_view_fit(t_app *app);

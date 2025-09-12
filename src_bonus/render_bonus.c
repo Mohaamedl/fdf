@@ -57,7 +57,10 @@ t_point2d	project_bonus_complete(t_point3d p3d, t_view *view, t_map *map)
 
 static void	draw_horizontal_line_bonus(t_app_bonus *app, int x, int y)
 {
-	t_point2d	pts[2];
+	t_point2d		pts[2];
+	t_line_gradient	line;
+	int				color1;
+	int				color2;
 
 	if (!app || !app->map.pts || x + 1 >= app->map.w || y >= app->map.h)
 		return ;
@@ -66,13 +69,19 @@ static void	draw_horizontal_line_bonus(t_app_bonus *app, int x, int y)
 	setup_horizontal_points(app, x, y, pts);
 	if (should_cull_line(pts[0], pts[1]))
 		return ;
-	draw_line_pts_color(&app->mlx.img, pts[0], pts[1],
-		pick_color_mode(&app->map.pts[y][x], &app->map, app->color_mode));
+	color1 = pick_color_mode(&app->map.pts[y][x], &app->map, app->color_mode);
+	color2 = pick_color_mode(&app->map.pts[y][x + 1], &app->map,
+			app->color_mode);
+	setup_line_data(&line, &app->mlx.img, pts[0], pts[1]);
+	draw_line_with_colors(&line, color1, color2);
 }
 
 static void	draw_vertical_line_bonus(t_app_bonus *app, int x, int y)
 {
-	t_point2d	pts[2];
+	t_point2d		pts[2];
+	t_line_gradient	line;
+	int				color1;
+	int				color2;
 
 	if (!app || !app->map.pts || y + 1 >= app->map.h || x >= app->map.w)
 		return ;
@@ -81,8 +90,11 @@ static void	draw_vertical_line_bonus(t_app_bonus *app, int x, int y)
 	setup_vertical_points(app, x, y, pts);
 	if (should_cull_line(pts[0], pts[1]))
 		return ;
-	draw_line_pts_color(&app->mlx.img, pts[0], pts[1],
-		pick_color_mode(&app->map.pts[y][x], &app->map, app->color_mode));
+	color1 = pick_color_mode(&app->map.pts[y][x], &app->map, app->color_mode);
+	color2 = pick_color_mode(&app->map.pts[y + 1][x], &app->map,
+			app->color_mode);
+	setup_line_data(&line, &app->mlx.img, pts[0], pts[1]);
+	draw_line_with_colors(&line, color1, color2);
 }
 
 void	render_wireframe_bonus_complete(t_app_bonus *app)

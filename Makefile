@@ -19,7 +19,7 @@ SRC = main.c hooks.c
 SRC_BONUS = main_bonus.c main_bonus_utils.c render_bonus.c hooks_keys_bonus.c hooks_mouse_bonus.c overlay_bonus.c demo_mode_bonus.c utils_bonus.c hooks_utils_bonus.c hooks_keys_utils_bonus.c hooks_mouse_utils_bonus.c render_utils_bonus.c render_setup_bonus.c
 
 # Shared sources that both mandatory and bonus need
-SHARED_SRC = parse.c render.c render_utils.c mlx_init.c view.c projection.c color.c utils.c parse_utils.c
+SHARED_SRC = parse.c render.c render_utils.c gradient.c gradient_wrapper.c color_utils.c mlx_init.c view.c projection.c color.c utils.c string_utils.c parse_utils.c
 
 OBJ = $(SRC:%.c=$(OBJ_DIR)/%.o) $(SHARED_SRC:%.c=$(OBJ_DIR)/%.o)
 OBJ_BONUS = $(SRC_BONUS:%.c=$(OBJ_BONUS_DIR)/%.o) \

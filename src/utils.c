@@ -12,6 +12,29 @@
 
 #include "../include/fdf.h"
 
+static int	process_hex_char(char c, int *result)
+{
+	if (c >= '0' && c <= '9')
+	{
+		*result = *result << 4;
+		*result += (c - '0');
+		return (1);
+	}
+	else if (c >= 'A' && c <= 'F')
+	{
+		*result = *result << 4;
+		*result += (c - 'A' + 10);
+		return (1);
+	}
+	else if (c >= 'a' && c <= 'f')
+	{
+		*result = *result << 4;
+		*result += (c - 'a' + 10);
+		return (1);
+	}
+	return (0);
+}
+
 int	hex_color_to_int(const char *hex_str)
 {
 	int		result;
@@ -20,69 +43,15 @@ int	hex_color_to_int(const char *hex_str)
 
 	result = 0;
 	i = 0;
-	while (hex_str[i] && (hex_str[i] != ' ' && hex_str[i] != '\t' 
-		&& hex_str[i] != '\n' && hex_str[i] != '\r'))
+	while (hex_str[i] && (hex_str[i] != ' ' && hex_str[i] != '\t'
+			&& hex_str[i] != '\n' && hex_str[i] != '\r'))
 	{
 		c = hex_str[i];
-		if (c >= '0' && c <= '9')
-		{
-			result = result << 4;
-			result += (c - '0');
-		}
-		else if (c >= 'A' && c <= 'F')
-		{
-			result = result << 4;
-			result += (c - 'A' + 10);
-		}
-		else if (c >= 'a' && c <= 'f')
-		{
-			result = result << 4;
-			result += (c - 'a' + 10);
-		}
-		else
+		if (!process_hex_char(c, &result))
 			break ;
 		i++;
 	}
 	return (result);
-}
-
-int	string_to_int_len(const char *str, int len)
-{
-	int		result;
-	int		sign;
-	int		i;
-
-	result = 0;
-	sign = 1;
-	i = 0;
-	if (str[0] == '-')
-	{
-		sign = -1;
-		i = 1;
-	}
-	else if (str[0] == '+')
-		i = 1;
-	while (i < len && str[i] >= '0' && str[i] <= '9')
-	{
-		result = result * 10 + (str[i] - '0');
-		i++;
-	}
-	return (result * sign);
-}
-
-void	free_string_array(char **array)
-{
-	int	i;
-
-	if (!array)
-		return ;
-	i = 0;
-	while (array[i])
-	{
-		free(array[i]);
-		i++;
-	}
-	free(array);
 }
 
 void	free_map(t_map *map)

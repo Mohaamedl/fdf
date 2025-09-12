@@ -14,44 +14,56 @@
 
 static void	draw_horizontal_line(t_app *app, int x, int y)
 {
+	t_point2d		pts[2];
+	t_line_gradient	line;
+	int				color1;
+	int				color2;
 	t_proj_params	params;
-	const t_point	*p1;
-	const t_point	*p2;
-	double			s[4];
-	t_point2d		pt[2];
+	double			proj_coords[4];
 
-	if (x + 1 >= app->map.w)
+	if (!app || !app->map.pts || x + 1 >= app->map.w || y >= app->map.h)
 		return ;
-	p1 = &app->map.pts[y][x];
-	p2 = &app->map.pts[y][x + 1];
-	params = (t_proj_params){x, y, p1->z, &s[0], &s[1]};
+	if (!app->map.pts[y])
+		return ;
+	params = (t_proj_params){x, y, app->map.pts[y][x].z,
+		&proj_coords[0], &proj_coords[1]};
 	project_point_safe(&app->view, &params);
-	params = (t_proj_params){x + 1, y, p2->z, &s[2], &s[3]};
+	params = (t_proj_params){x + 1, y, app->map.pts[y][x + 1].z,
+		&proj_coords[2], &proj_coords[3]};
 	project_point_safe(&app->view, &params);
-	pt[0] = (t_point2d){(int)s[0], (int)s[1]};
-	pt[1] = (t_point2d){(int)s[2], (int)s[3]};
-	draw_line_pts(&app->mlx.img, pt[0], pt[1], pick_color(p1, &app->map));
+	pts[0] = (t_point2d){(int)proj_coords[0], (int)proj_coords[1]};
+	pts[1] = (t_point2d){(int)proj_coords[2], (int)proj_coords[3]};
+	color1 = pick_color(&app->map.pts[y][x], &app->map);
+	color2 = pick_color(&app->map.pts[y][x + 1], &app->map);
+	setup_line_data(&line, &app->mlx.img, pts[0], pts[1]);
+	draw_line_with_colors(&line, color1, color2);
 }
 
 static void	draw_vertical_line(t_app *app, int x, int y)
 {
+	t_point2d		pts[2];
+	t_line_gradient	line;
+	int				color1;
+	int				color2;
 	t_proj_params	params;
-	const t_point	*p1;
-	const t_point	*p2;
-	double			s[4];
-	t_point2d		pt[2];
+	double			proj_coords[4];
 
-	if (y + 1 >= app->map.h)
+	if (!app || !app->map.pts || y + 1 >= app->map.h || x >= app->map.w)
 		return ;
-	p1 = &app->map.pts[y][x];
-	p2 = &app->map.pts[y + 1][x];
-	params = (t_proj_params){x, y, p1->z, &s[0], &s[1]};
+	if (!app->map.pts[y] || !app->map.pts[y + 1])
+		return ;
+	params = (t_proj_params){x, y, app->map.pts[y][x].z,
+		&proj_coords[0], &proj_coords[1]};
 	project_point_safe(&app->view, &params);
-	params = (t_proj_params){x, y + 1, p2->z, &s[2], &s[3]};
+	params = (t_proj_params){x, y + 1, app->map.pts[y + 1][x].z,
+		&proj_coords[2], &proj_coords[3]};
 	project_point_safe(&app->view, &params);
-	pt[0] = (t_point2d){(int)s[0], (int)s[1]};
-	pt[1] = (t_point2d){(int)s[2], (int)s[3]};
-	draw_line_pts(&app->mlx.img, pt[0], pt[1], pick_color(p1, &app->map));
+	pts[0] = (t_point2d){(int)proj_coords[0], (int)proj_coords[1]};
+	pts[1] = (t_point2d){(int)proj_coords[2], (int)proj_coords[3]};
+	color1 = pick_color(&app->map.pts[y][x], &app->map);
+	color2 = pick_color(&app->map.pts[y + 1][x], &app->map);
+	setup_line_data(&line, &app->mlx.img, pts[0], pts[1]);
+	draw_line_with_colors(&line, color1, color2);
 }
 
 void	render_wireframe(t_app *app)
@@ -59,6 +71,8 @@ void	render_wireframe(t_app *app)
 	int	x;
 	int	y;
 
+	if (!app || !app->map.pts)
+		return ;
 	img_clear(&app->mlx.img, 0x000000);
 	y = 0;
 	while (y < app->map.h)
@@ -72,16 +86,4 @@ void	render_wireframe(t_app *app)
 		}
 		y++;
 	}
-}
-
-void	put_px(t_img *img, int x, int y, int color)
-{
-	char	*dst;
-
-	if (!img || !img->addr)
-		return ;
-	if (x < 0 || y < 0 || x >= img->w || y >= img->h)
-		return ;
-	dst = img->addr + y * img->line_len + x * (img->bpp / 8);
-	*(unsigned int *)dst = (unsigned int)color;
 }

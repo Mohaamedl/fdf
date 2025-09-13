@@ -66,3 +66,19 @@ int	pick_color(const t_point *p, const t_map *map)
 		return (p->color);
 	return (get_scheme_color(get_percent(p->z, map), 0));
 }
+
+int	lerp_color(int color1, int color2, double t)
+{
+	int	rgb1[3];
+	int	rgb2[3];
+
+	rgb1[0] = (color1 >> 16) & 0xFF;
+	rgb1[1] = (color1 >> 8) & 0xFF;
+	rgb1[2] = color1 & 0xFF;
+	rgb2[0] = (color2 >> 16) & 0xFF;
+	rgb2[1] = (color2 >> 8) & 0xFF;
+	rgb2[2] = color2 & 0xFF;
+	return (((int)(rgb1[0] + (rgb2[0] - rgb1[0]) * t) << 16)
+					| ((int)(rgb1[1] + (rgb2[1] - rgb1[1]) * t) << 8)
+					| (int)(rgb1[2] + (rgb2[2] - rgb1[2]) * t));
+}

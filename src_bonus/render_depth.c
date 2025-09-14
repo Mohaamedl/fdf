@@ -91,7 +91,9 @@ void	render_depth_sorted_bonus(t_app_bonus *app)
 
 	if (!app || !app->map.pts)
 		return ;
-	if (app->map.w * app->map.h > 100000)
+	if (app->map.w * app->map.h > 200000)
+		passes = 2;
+	else if (app->map.w * app->map.h > 100000)
 		passes = 8;
 	else
 		passes = 20;

@@ -89,7 +89,6 @@ typedef struct s_line_gradient
 	int			color2;
 }	t_line_gradient;
 
-
 typedef struct s_mlx
 {
 	void	*mlx;
@@ -151,7 +150,7 @@ void	img_clear(t_img *img, int color);
 void	put_px(t_img *img, int x, int y, int color);
 void	draw_line_pts(t_img *img, t_point2d pt1, t_point2d pt2, int color);
 void	setup_line_data(t_line_gradient *line, t_img *img, t_point2d a,
-		t_point2d b);
+			t_point2d b);
 void	draw_line_with_colors(t_line_gradient *line, int c1, int c2);
 void	draw_gradient_line(t_line_gradient *line);
 int		lerp_color(int color1, int color2, double t);

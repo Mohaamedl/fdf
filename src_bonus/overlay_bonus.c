@@ -12,24 +12,6 @@
 
 #include "../include/fdf_bonus.h"
 
-void	draw_controls_overlay(t_app *app)
-{
-	int	y;
-	int	color;
-
-	y = 20;
-	color = 0xFFFFFF;
-	draw_text_line(app, "=== FdF BONUS CONTROLS ===", y, 0x00FF00);
-	y += 25;
-	draw_basic_controls(app, &y, color);
-	draw_movement_controls(app, &y, color);
-	draw_text_line(app, "OTHER:", y, 0xFFFF00);
-	y += 20;
-	draw_text_line(app, "  ESC - Exit", y, color);
-	y += 15;
-	draw_text_line(app, "  H - Toggle help", y, color);
-}
-
 void	draw_help_overlay_complete(t_app_bonus *app)
 {
 	int	y;

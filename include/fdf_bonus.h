@@ -17,19 +17,10 @@
 
 typedef struct s_point3d
 {
-  double		x;
-  double		y;
-  double		z;
+	double		x;
+	double		y;
+	double		z;
 }	t_point3d;
-
-typedef struct s_depth_line_bonus
-{
-	t_point2d	p1;
-	t_point2d	p2;
-	int			color1;
-	int			color2;
-	double		depth;
-}	t_depth_line_bonus;
 
 typedef struct s_z_range
 {
@@ -95,25 +86,25 @@ typedef struct s_z_range
 
 typedef struct s_app_bonus
 {
-  t_mlx		mlx;
-  t_map		map;
-  t_view		view;
-  int			fps;
-  int			demo_mode;
-  double		demo_rotation;
-  double		demo_scale_factor;
-  int			demo_direction;
-  double		demo_translation_x;
-  double		demo_translation_y;
-  int			show_overlay;
-  int			wireframe_mode;
-  int			color_mode;
-  int			mouse_down;
-  int			mouse_button;
-  int			last_x;
-  int			last_y;
-  int			show_help;
-  int			needs_redraw;
+	t_mlx		mlx;
+	t_map		map;
+	t_view		view;
+	int			fps;
+	int			demo_mode;
+	double		demo_rotation;
+	double		demo_scale_factor;
+	int			demo_direction;
+	double		demo_translation_x;
+	double		demo_translation_y;
+	int			show_overlay;
+	int			wireframe_mode;
+	int			color_mode;
+	int			mouse_down;
+	int			mouse_button;
+	int			last_x;
+	int			last_y;
+	int			show_help;
+	int			needs_redraw;
 }	t_app_bonus;
 
 typedef struct s_point_setup
@@ -124,69 +115,59 @@ typedef struct s_point_setup
 	int			is_horizontal;
 }	t_point_setup;
 
-int			hook_key_bonus_complete(int key, void *param);
-int			hook_key_release_bonus(int key, void *param);
-int			loop_hook_bonus(void *param);
-int			hook_mouse_bonus(int button, int x, int y, void *param);
-int			hook_mouse_release_bonus(int button, int x, int y, void *param);
-int			hook_mouse_move_bonus(int x, int y, void *param);
-int			hook_destroy_bonus(void *param);
-void		rerender_bonus_immediate(t_app_bonus *app);
-void		rerender_bonus_complete(t_app_bonus *app);
-void		demo_mode_update(t_app_bonus *app);
-void		draw_help_overlay_complete(t_app_bonus *app);
-void		draw_status_display(t_app_bonus *app);
-void		draw_text_line(t_app *app, char *text, int y, int color);
-char		*get_projection_name(int proj);
-void		draw_basic_controls(t_app *app, int *y, int color);
-void		draw_movement_controls(t_app *app, int *y, int color);
-t_point2d	project_bonus_complete(t_point3d p3d, t_view *view, t_map *map);
-int			pick_color_mode(const t_point *p, const t_map *map, int mode);
-void		render_wireframe_bonus_complete(t_app_bonus *app);
-void		init_app_vars(t_app_bonus *app);
-void		setup_hooks(t_app_bonus *app);
-void		init_view_bonus(t_app_bonus *app);
-t_point3d	apply_rotations(t_point3d p, double cx, double cy, t_view *view);
-void		apply_planar_projection(t_point3d p3d, t_view *view, t_map *map,
-			t_point2d *result);
-int			should_cull_line(t_point2d pt1, t_point2d pt2);
-void		setup_horizontal_points(t_app_bonus *app, int x, int y,
-			t_point2d *pts);
-void		setup_vertical_points(t_app_bonus *app, int x, int y,
-			t_point2d *pts);
-void		handle_movement_keys(int keycode, t_app_bonus *app);
-void		handle_projection_change(t_app_bonus *app);
-void		handle_x_rotation(int keycode, t_app_bonus *app);
-void		handle_y_rotation(int keycode, t_app_bonus *app);
-void		handle_zoom_keys(int keycode, t_app_bonus *app);
-void		handle_rotation_keys(int keycode, t_app_bonus *app);
-void		handle_xyz_rotation_keys(int keycode, t_app_bonus *app);
-void		handle_zscale_keys(int keycode, t_app_bonus *app);
-void		reset_view(t_app_bonus *app);
-int			throttle_ok_and_stamp(t_app_bonus *app, long min_ms);
-int			handle_other_keys(int keycode, t_app_bonus *app);
-void		handle_redraw(t_app_bonus *app, int *frame_count,
-			struct timeval *fps_last);
-void		handle_scroll_zoom(t_app_bonus *app, int button, int x, int y);
-void		handle_mouse_button_press(t_app_bonus *app, int button, int x,
-			int y);
-long		get_target_ms(t_app_bonus *app);
-int			check_mouse_throttle(t_app_bonus *app);
-void		handle_left_mouse_drag(t_app_bonus *app, int dx, int dy);
-void		handle_right_mouse_drag(t_app_bonus *app, int dx, int dy);
-void		handle_middle_mouse_drag(t_app_bonus *app, int dx);
-int			should_render_first_bonus(t_app_bonus *app, int x, int y,
-			int is_horizontal);
-void		render_pass_bonus(t_app_bonus *app, int pass);
-void		draw_horizontal_line_bonus(t_app_bonus *app, int x, int y);
-void		draw_vertical_line_bonus(t_app_bonus *app, int x, int y);
-
+int				hook_key_bonus_complete(int key, void *param);
+int				hook_key_release_bonus(int key, void *param);
+int				loop_hook_bonus(void *param);
+int				hook_mouse_bonus(int button, int x, int y, void *param);
+int				hook_mouse_release_bonus(int button, int x, int y, void *param);
+int				hook_mouse_move_bonus(int x, int y, void *param);
+int				hook_destroy_bonus(void *param);
+void			rerender_bonus_immediate(t_app_bonus *app);
+void			rerender_bonus_complete(t_app_bonus *app);
+void			demo_mode_update(t_app_bonus *app);
+void			draw_help_overlay_complete(t_app_bonus *app);
+void			draw_status_display(t_app_bonus *app);
+void			draw_text_line(t_app *app, char *text, int y, int color);
+char			*get_projection_name(int proj);
+void			draw_basic_controls(t_app *app, int *y, int color);
+void			draw_movement_controls(t_app *app, int *y, int color);
+t_point2d		project_bonus_complete(t_point3d p3d, t_view *view, t_map *map);
+int				pick_color_mode(const t_point *p, const t_map *map, int mode);
+void			render_wireframe_bonus_complete(t_app_bonus *app);
+void			init_app_vars(t_app_bonus *app);
+void			setup_hooks(t_app_bonus *app);
+void			init_view_bonus(t_app_bonus *app);
+t_point3d		apply_rotations(t_point3d p, double cx, double cy,
+					t_view *view);
+void			apply_planar_projection(t_point3d p3d, t_view *view, t_map *map,
+					t_point2d *result);
+int				should_cull_line(t_point2d pt1, t_point2d pt2);
+void			setup_horizontal_points(t_app_bonus *app, int x, int y,
+					t_point2d *pts);
+void			setup_vertical_points(t_app_bonus *app, int x, int y,
+					t_point2d *pts);
+void			handle_movement_keys(int keycode, t_app_bonus *app);
+void			handle_projection_change(t_app_bonus *app);
+void			handle_x_rotation(int keycode, t_app_bonus *app);
+void			handle_y_rotation(int keycode, t_app_bonus *app);
+void			handle_zoom_keys(int keycode, t_app_bonus *app);
+void			handle_rotation_keys(int keycode, t_app_bonus *app);
+void			handle_xyz_rotation_keys(int keycode, t_app_bonus *app);
+void			handle_zscale_keys(int keycode, t_app_bonus *app);
+void			reset_view(t_app_bonus *app);
+int				throttle_ok_and_stamp(t_app_bonus *app, long min_ms);
+int				handle_other_keys(int keycode, t_app_bonus *app);
+void			handle_redraw(t_app_bonus *app, int *frame_count,
+					struct timeval *fps_last);
+void			handle_scroll_zoom(t_app_bonus *app, int button, int x, int y);
+void			handle_mouse_button_press(t_app_bonus *app, int button, int x,
+					int y);
+long			get_target_ms(t_app_bonus *app);
+int				check_mouse_throttle(t_app_bonus *app);
+void			handle_left_mouse_drag(t_app_bonus *app, int dx, int dy);
+void			handle_right_mouse_drag(t_app_bonus *app, int dx, int dy);
+void			handle_middle_mouse_drag(t_app_bonus *app, int dx);
 /* Depth sorting functions - bonus only */
-void		render_depth_sorted_bonus(t_app_bonus *app);
-double		calculate_depth_bonus(t_app_bonus *app, int x1, int y1, int x2,
-			int y2);
-int			is_line_visible_bonus(t_point2d p1, t_point2d p2);
-void		setup_3d_points(int coords[4], t_app_bonus *app, t_point3d *p1,
-			t_point3d *p2);
+void			render_depth_sorted_bonus(t_app_bonus *app);
 
 #endif

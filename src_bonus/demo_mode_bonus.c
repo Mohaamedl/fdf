@@ -63,9 +63,3 @@ void	demo_mode_update(t_app_bonus *app)
 	frame_count++;
 	update_view_params(app, time, base_scale, frame_count);
 }
-
-void	app_message(t_app *app, char *msg)
-{
-	(void)app;
-	(void)msg;
-}
